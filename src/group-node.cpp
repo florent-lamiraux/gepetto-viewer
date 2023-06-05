@@ -58,27 +58,37 @@ GroupNodePtr_t GroupNode::clone(void) const {
 
 GroupNodePtr_t GroupNode::self(void) const { return weak_ptr_.lock(); }
 
-bool GroupNode::addChild(NodePtr_t child_ptr) {
+bool GroupNode::addChild(NodeWeakPtr child_ptr) {
   list_of_objects_.push_back(child_ptr);
-  this->asQueue()->addChild(child_ptr->asGroup());
+  this->asQueue()->addChild(child_ptr.lock()->asGroup());
   setDirty();
   return true;
 }
 
-bool GroupNode::removeChild(NodePtr_t child_ptr) {
-  Nodes_t::iterator it =
-      std::find(list_of_objects_.begin(), list_of_objects_.end(), child_ptr);
+// bool operator==(NodeWeakPtr w1, const NodeWeakPtr w2) {
+//   return w1 == const_cast<NodeWeakPtr>(w2);
+// }
+
+bool GroupNode::removeChild(NodeWeakPtr child_ptr) {
+  NodePtr_t child(child_ptr.lock());
+  Nodes_t::iterator it = list_of_objects_.begin();
+  for (;it != list_of_objects_.end(); ++it) {
+    if (it->lock() == child) break;
+  }
   if (it != list_of_objects_.end()) list_of_objects_.erase(it);
   bool removed = this->asQueue()->removeChild(
-      this->asQueue()->getChildIndex(child_ptr->asGroup()));
+      this->asQueue()->getChildIndex(child_ptr.lock()->asGroup()));
   if (removed) setDirty();
   return removed;
 }
 
-bool GroupNode::hasChild(NodePtr_t child_ptr) const {
-  Nodes_t::const_iterator it =
-      std::find(list_of_objects_.begin(), list_of_objects_.end(), child_ptr);
-  return it != list_of_objects_.end();
+bool GroupNode::hasChild(NodeWeakPtr child_ptr) const {
+  NodePtr_t child(child_ptr.lock());
+  for (Nodes_t::const_iterator it = list_of_objects_.begin();
+       it != list_of_objects_.end(); ++it) {
+    if (it->lock() == child) return true;
+  }
+  return false;
 }
 
 void GroupNode::removeAllChildren() {
@@ -92,7 +102,7 @@ void GroupNode::setLightingMode(const LightingMode& lighting_state) {
   Nodes_t::iterator iter_list_of_objects;
   for (iter_list_of_objects = list_of_objects_.begin();
        iter_list_of_objects != list_of_objects_.end(); iter_list_of_objects++) {
-    (*iter_list_of_objects)->setLightingMode(lighting_state);
+    iter_list_of_objects->lock()->setLightingMode(lighting_state);
   }
 }
 
@@ -102,7 +112,7 @@ void GroupNode::setWireFrameMode(const WireFrameMode& wireframe_state) {
   Nodes_t::iterator iter_list_of_objects;
   for (iter_list_of_objects = list_of_objects_.begin();
        iter_list_of_objects != list_of_objects_.end(); iter_list_of_objects++) {
-    (*iter_list_of_objects)->setWireFrameMode(wireframe_state);
+    iter_list_of_objects->lock()->setWireFrameMode(wireframe_state);
   }
 }
 
@@ -111,7 +121,7 @@ void GroupNode::setAlpha(const float& alpha) {
   Nodes_t::iterator iter_list_of_objects;
   for (iter_list_of_objects = list_of_objects_.begin();
        iter_list_of_objects != list_of_objects_.end(); iter_list_of_objects++) {
-    (*iter_list_of_objects)->setAlpha(alpha);
+    iter_list_of_objects->lock()->setAlpha(alpha);
   }
 }
 
@@ -119,7 +129,7 @@ void GroupNode::setColor(const osgVector4& color) {
   Nodes_t::iterator iter_list_of_objects;
   for (iter_list_of_objects = list_of_objects_.begin();
        iter_list_of_objects != list_of_objects_.end(); iter_list_of_objects++) {
-    (*iter_list_of_objects)->setColor(color);
+    iter_list_of_objects->lock()->setColor(color);
   }
 }
 
@@ -127,7 +137,7 @@ void GroupNode::traverse(NodeVisitor& visitor) {
   Nodes_t::iterator iter_list_of_objects;
   for (iter_list_of_objects = list_of_objects_.begin();
        iter_list_of_objects != list_of_objects_.end(); iter_list_of_objects++) {
-    (*iter_list_of_objects)->accept(visitor);
+    iter_list_of_objects->lock()->accept(visitor);
   }
 }
 

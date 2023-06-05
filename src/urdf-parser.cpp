@@ -98,7 +98,7 @@ class LinkNode : public GroupNode {
 bool getShowVisuals(const GroupNode* gn) {
   bool value = true;
   for (std::size_t i = 0; i < gn->getNumOfChildren(); ++i) {
-    NodePtr_t n = gn->getChild(i);
+    NodePtr_t n = gn->getChild(i).lock();
     if (n->hasProperty("ShowVisual")) {
       bool v;
       n->getProperty("ShowVisual", v);
@@ -109,7 +109,7 @@ bool getShowVisuals(const GroupNode* gn) {
 }
 void setShowVisuals(GroupNode* gn, bool visual) {
   for (std::size_t i = 0; i < gn->getNumOfChildren(); ++i) {
-    NodePtr_t n = gn->getChild(i);
+    NodePtr_t n = gn->getChild(i).lock();
     if (n->hasProperty("ShowVisual")) n->setProperty("ShowVisual", visual);
   }
 }
@@ -437,7 +437,7 @@ GroupNodePtr_t parse(const std::string& robotName, const std::string& urdf_file,
         details::LinkNode ::create(robotName + "/" + link_name));
     linkNode->showVisual(visual);
     // add link to robot node
-    robot->addChild(linkNode);
+    robot->addChild(NodeWeakPtr(linkNode));
 
     if (visual) {
       details::addGeoms<true>(robotName, name, link, linkNode, linkFrame, cache,

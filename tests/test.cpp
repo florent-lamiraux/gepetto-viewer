@@ -49,7 +49,7 @@ int main(int, const char**)
   // std::string("/home/ostasse/devel/ros-indigo-1/install/share/hrp2_14_description/urdf/hrp2_14.urdf"),
   // std::string("/home/ostasse/devel/ros-indigo-1/install/share/"));
 
-  world->addChild(box);
+  world->addChild(NodeWeakPtr(box));
   /*world->addChild(obstacle);
 
   DefVector3 position1(2.,0.,0.);
@@ -84,7 +84,7 @@ int main(int, const char**)
 
   // world->addChild(ground);
   // world->addChild(line);
-  world->addChild(box);
+  world->addChild(NodeWeakPtr(box));
   // world->addChild(robot);
   WindowManagerPtr_t gm = WindowManager::create();
   gm->addNode(world);

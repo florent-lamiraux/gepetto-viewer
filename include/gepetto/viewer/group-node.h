@@ -10,6 +10,7 @@
 #define GEPETTO_VIEWER_GROUPNODE_HH
 
 #include <gepetto/viewer/node.h>
+#include <gepetto/viewer/deprecated.hh>
 
 namespace gepetto {
 namespace viewer {
@@ -21,7 +22,7 @@ class GroupNode : public Node {
   /**
    \brief List of all child graphical object
    */
-  typedef std::vector<NodePtr_t> Nodes_t;
+  typedef std::vector<NodeWeakPtr> Nodes_t;
   Nodes_t list_of_objects_;
 
   /** Associated weak pointer */
@@ -58,15 +59,33 @@ class GroupNode : public Node {
 
   /** Add a GraphicalObject to the list
    */
-  virtual bool addChild(NodePtr_t child_ptr);
+  virtual bool addChild(NodePtr_t child_ptr) GEPETTO_VIEWER_DEPRECATED {
+    return addChild(NodeWeakPtr(child_ptr));
+  }
+
+  /** Add a GraphicalObject to the list
+   */
+  virtual bool addChild(NodeWeakPtr child_ptr);
 
   /** Remove a GraphicalObject from the list
    */
-  virtual bool removeChild(NodePtr_t child_ptr);
+  virtual bool removeChild(NodePtr_t child_ptr) GEPETTO_VIEWER_DEPRECATED {
+    return removeChild(NodeWeakPtr(child_ptr));
+  }
+
+  /** Remove a GraphicalObject from the list
+   */
+  virtual bool removeChild(NodeWeakPtr child_ptr);
 
   /** Return true if this group contains this child
    */
-  virtual bool hasChild(NodePtr_t child_ptr) const;
+  virtual bool hasChild(NodePtr_t child_ptr) const GEPETTO_VIEWER_DEPRECATED {
+    return hasChild(NodeWeakPtr(child_ptr));
+  }
+
+  /** Return true if this group contains this child
+   */
+  virtual bool hasChild(NodeWeakPtr child_ptr) const;
 
   /** Remove all children
    */
@@ -74,12 +93,12 @@ class GroupNode : public Node {
 
   virtual size_t getNumOfChildren() const { return list_of_objects_.size(); }
 
-  virtual NodePtr_t getChild(size_t i) const {
+  virtual NodeWeakPtr getChild(size_t i) const {
     Nodes_t::const_iterator it = list_of_objects_.begin();
     if (list_of_objects_.size() > i) {
       std::advance(it, (long)i);
     }
-    return *it;
+    return it->lock();
   }
 
   /**

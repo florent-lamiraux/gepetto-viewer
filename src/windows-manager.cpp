@@ -94,11 +94,11 @@
 namespace gepetto {
 namespace viewer {
 namespace {
-typedef std::map<std::string, NodePtr_t>::iterator NodeMapIt;
-typedef std::map<std::string, NodePtr_t>::const_iterator NodeMapConstIt;
+typedef std::map<std::string, NodeWeakPtr>::iterator NodeMapIt;
+typedef std::map<std::string, NodeWeakPtr>::const_iterator NodeMapConstIt;
 
-typedef std::map<std::string, GroupNodePtr_t>::iterator GroupNodeMapIt;
-typedef std::map<std::string, GroupNodePtr_t>::const_iterator
+typedef std::map<std::string, GroupNodeWeakPtr>::iterator GroupNodeMapIt;
+typedef std::map<std::string, GroupNodeWeakPtr>::const_iterator
     GroupNodeMapConstIt;
 
 typedef ScopedLock ScopedLock;
@@ -209,14 +209,14 @@ std::string WindowsManager::parentName(const std::string& name) {
     return name.substr(0, slash);
 }
 
-NodePtr_t WindowsManager::find(const std::string name, GroupNodePtr_t) {
+NodeWeakPtr WindowsManager::find(const std::string name, GroupNodePtr_t) {
   NodeMapIt it = nodes_.find(name);
   if (it == nodes_.end()) {
     std::string::size_type slash = name.find_first_of('/');
     if (slash == std::string::npos) return NodePtr_t();
     GroupNodeMapIt itg = groupNodes_.find(name.substr(0, slash));
     if (itg == groupNodes_.end()) return NodePtr_t();
-    return find(name.substr(slash + 1), itg->second);
+    return find(name.substr(slash + 1), itg->second.lock());
   }
   return it->second;
 }
@@ -237,7 +237,7 @@ NodePtr_t WindowsManager::getNode(const std::string& name,
     } else
       return NodePtr_t();
   }
-  return it->second;
+  return it->second.lock();
 }
 
 template <typename Iterator, typename NodeContainer_t>
@@ -269,7 +269,7 @@ void WindowsManager::addNode(const std::string& nodeName, NodePtr_t node,
 void WindowsManager::addNode(const std::string& nodeName, NodePtr_t node,
                              GroupNodePtr_t parent) {
   initParent(node, parent);
-  nodes_[nodeName] = node;
+  nodes_[nodeName] = NodeWeakPtr(node);
 }
 
 void WindowsManager::addGroup(const std::string& groupName,
@@ -282,8 +282,7 @@ void WindowsManager::addGroup(const std::string& groupName,
 void WindowsManager::addGroup(const std::string& groupName,
                               GroupNodePtr_t group, GroupNodePtr_t parent) {
   initParent(group, parent);
-  nodes_[groupName] = group;
-  groupNodes_[groupName] = group;
+  nodes_[groupName] = groupNodes_[groupName] = GroupNodeWeakPtr(group);
 }
 
 // Public functions
@@ -624,7 +623,7 @@ bool WindowsManager::createRoadmap(const std::string& roadmapName,
                                                 sizeAxis, colorEdge);
   ScopedLock lock(osgFrameMutex());
   addNode(roadmapName, rm, true);
-  roadmapNodes_[roadmapName] = rm;
+  roadmapNodes_[roadmapName] = RoadmapViewerWeakPtr(rm);
   return true;
 }
 
@@ -636,7 +635,7 @@ bool WindowsManager::addEdgeToRoadmap(const std::string& nameRoadmap,
     log() << "No roadmap named \"" << nameRoadmap << "\"" << std::endl;
     return false;
   } else {
-    RoadmapViewerPtr_t rm_ptr = roadmapNodes_[nameRoadmap];
+    RoadmapViewerPtr_t rm_ptr = roadmapNodes_[nameRoadmap].lock();
     //  ScopedLock lock(osgFrameMutex()); mtx is now locked only when required
     //  in addEdge
     rm_ptr->addEdge(posFrom, posTo, osgFrameMutex());
@@ -651,7 +650,7 @@ bool WindowsManager::addNodeToRoadmap(const std::string& nameRoadmap,
     log() << "No roadmap named \"" << nameRoadmap << "\"" << std::endl;
     return false;
   } else {
-    RoadmapViewerPtr_t rm_ptr = roadmapNodes_[nameRoadmap];
+    RoadmapViewerPtr_t rm_ptr = roadmapNodes_[nameRoadmap].lock();
     // ScopedLock lock(osgFrameMutex());
     rm_ptr->addNode(conf.position, conf.quat, osgFrameMutex());
     return true;
@@ -673,7 +672,7 @@ std::vector<std::string> WindowsManager::getGroupNodeList(
   if (!g) return l;
   l.reserve(g->getNumOfChildren());
   for (std::size_t i = 0; i < g->getNumOfChildren(); ++i)
-    l.push_back(g->getChild(i)->getID());
+    l.push_back(g->getChild(i).lock()->getID());
   return l;
 }
 
@@ -750,12 +749,12 @@ bool WindowsManager::loadUDRF(const std::string& urdfName,
   addGroup(urdfName, urdf, true);
   NodePtr_t link;
   for (std::size_t i = 0; i < urdf->getNumOfChildren(); i++) {
-    link = urdf->getChild(i);
+    link = urdf->getChild(i).lock();
     GroupNodePtr_t groupNode(dynamic_pointer_cast<GroupNode>(link));
     if (groupNode) {
       addGroup(link->getID(), groupNode, urdf);
       for (std::size_t j = 0; j < groupNode->getNumOfChildren(); ++j) {
-        NodePtr_t object(groupNode->getChild(j));
+        NodePtr_t object(groupNode->getChild(j).lock());
         addNode(object->getID(), object, groupNode);
       }
     } else {
@@ -774,7 +773,7 @@ bool WindowsManager::addToGroup(const std::string& nodeName,
 
   ScopedLock lock(osgFrameMutex());  // if addChild is called in the same time
                                      // as osg::frame(), gepetto-viewer crash
-  groupNodes_[groupName]->addChild(nodes_[nodeName]);
+  groupNodes_[groupName].lock()->addChild(nodes_[nodeName].lock());
   return true;
 }
 
@@ -787,7 +786,7 @@ bool WindowsManager::removeFromGroup(const std::string& nodeName,
     return false;
   } else {
     ScopedLock lock(osgFrameMutex());
-    groupNodes_[groupName]->removeChild(nodes_[nodeName]);
+    groupNodes_[groupName].lock()->removeChild(nodes_[nodeName].lock());
     return true;
   }
 }
@@ -801,12 +800,12 @@ bool WindowsManager::deleteNode(const std::string& nodeName, bool all) {
     GroupNodeMapIt it = groupNodes_.find(nodeName);
     if (it != groupNodes_.end()) {
       if (all) {
-        std::vector<std::string> names(it->second->getNumOfChildren());
+        std::vector<std::string> names(it->second.lock()->getNumOfChildren());
         for (std::size_t i = 0; i < names.size(); ++i)
-          names[i] = it->second->getChild(i)->getID();
+          names[i] = it->second.lock()->getChild(i).lock()->getID();
         {
           ScopedLock lock(osgFrameMutex());
-          it->second->removeAllChildren();
+          it->second.lock()->removeAllChildren();
         }
         for (std::size_t i = 0; i < names.size(); ++i)
           deleteNode(names[i], all);
@@ -819,7 +818,9 @@ bool WindowsManager::deleteNode(const std::string& nodeName, bool all) {
     GroupNodeMapConstIt itg;
     ScopedLock lock(osgFrameMutex());
     for (itg = groupNodes_.begin(); itg != groupNodes_.end(); ++itg) {
-      if (itg->second && itg->second->hasChild(n)) itg->second->removeChild(n);
+      if (
+          //itg->second &&
+          itg->second.lock()->hasChild(n)) itg->second.lock()->removeChild(n);
     }
     nodes_.erase(nodeName);
     return true;
@@ -881,14 +882,14 @@ bool WindowsManager::applyConfigurations(
 bool WindowsManager::addLandmark(const std::string& nodeName, float size) {
   RETURN_FALSE_IF_NODE_DOES_NOT_EXIST(nodeName);
   ScopedLock lock(osgFrameMutex());
-  nodes_[nodeName]->addLandmark(size);
+  nodes_[nodeName].lock()->addLandmark(size);
   return true;
 }
 
 bool WindowsManager::deleteLandmark(const std::string& nodeName) {
   RETURN_FALSE_IF_NODE_DOES_NOT_EXIST(nodeName);
   ScopedLock lock(osgFrameMutex());
-  nodes_[nodeName]->deleteLandmark();
+  nodes_[nodeName].lock()->deleteLandmark();
   return true;
 }
 
@@ -902,7 +903,7 @@ bool WindowsManager::setStaticTransform(const std::string& nodeName,
                                         const Configuration& transform) {
   RETURN_FALSE_IF_NODE_DOES_NOT_EXIST(nodeName);
   ScopedLock lock(osgFrameMutex());
-  nodes_[nodeName]->setStaticTransform(transform.position, transform.quat);
+  nodes_[nodeName].lock()->setStaticTransform(transform.position, transform.quat);
   return true;
 }
 
@@ -911,7 +912,7 @@ bool WindowsManager::setVisibility(const std::string& nodeName,
   RETURN_FALSE_IF_NODE_DOES_NOT_EXIST(nodeName);
   VisibilityMode visibility = getVisibility(visibilityMode);
   ScopedLock lock(osgFrameMutex());
-  nodes_[nodeName]->setVisibilityMode(visibility);
+  nodes_[nodeName].lock()->setVisibilityMode(visibility);
   return true;
 }
 
@@ -919,7 +920,7 @@ bool WindowsManager::setScale(const std::string& nodeName,
                               const osgVector3& scale) {
   RETURN_FALSE_IF_NODE_DOES_NOT_EXIST(nodeName);
   ScopedLock lock(osgFrameMutex());
-  nodes_[nodeName]->setScale(scale);
+  nodes_[nodeName].lock()->setScale(scale);
   return true;
 }
 
@@ -935,7 +936,7 @@ bool WindowsManager::setScale(const std::string& nodeName,
 bool WindowsManager::setAlpha(const std::string& nodeName, const float& alpha) {
   RETURN_FALSE_IF_NODE_DOES_NOT_EXIST(nodeName);
   ScopedLock lock(osgFrameMutex());
-  nodes_[nodeName]->setAlpha(alpha);
+  nodes_[nodeName].lock()->setAlpha(alpha);
   return true;
 }
 
@@ -949,7 +950,7 @@ bool WindowsManager::setColor(const std::string& nodeName,
   RETURN_FALSE_IF_NODE_DOES_NOT_EXIST(nodeName);
   osgVector4 vecColor(color[0], color[1], color[2], color[3]);
   ScopedLock lock(osgFrameMutex());
-  nodes_[nodeName]->setColor(vecColor);
+  nodes_[nodeName].lock()->setColor(vecColor);
   return true;
 }
 
@@ -958,7 +959,7 @@ bool WindowsManager::setWireFrameMode(const std::string& nodeName,
   RETURN_FALSE_IF_NODE_DOES_NOT_EXIST(nodeName);
   WireFrameMode wire = getWire(wireFrameMode);
   ScopedLock lock(osgFrameMutex());
-  nodes_[nodeName]->setWireFrameMode(wire);
+  nodes_[nodeName].lock()->setWireFrameMode(wire);
   return true;
 }
 
@@ -967,14 +968,14 @@ bool WindowsManager::setLightingMode(const std::string& nodeName,
   RETURN_FALSE_IF_NODE_DOES_NOT_EXIST(nodeName);
   LightingMode light = getLight(lightingMode);
   ScopedLock lock(osgFrameMutex());
-  nodes_[nodeName]->setLightingMode(light);
+  nodes_[nodeName].lock()->setLightingMode(light);
   return true;
 }
 
 bool WindowsManager::setHighlight(const std::string& nodeName, int state) {
   RETURN_FALSE_IF_NODE_DOES_NOT_EXIST(nodeName);
   ScopedLock lock(osgFrameMutex());
-  nodes_[nodeName]->setHighlightState(state);
+  nodes_[nodeName].lock()->setHighlightState(state);
   return true;
 }
 
@@ -1016,7 +1017,7 @@ bool WindowsManager::writeNodeFile(const std::string& nodeName,
   osg::ref_ptr<osgDB::Options> os = new osgDB::Options;
   os->setOptionString("NoExtras");
   osgDB::ReaderWriter::WriteResult wr = osgDB::Registry::instance()->writeNode(
-      *nodes_[nodeName]->asGroup(), std::string(filename), os.get());
+      *nodes_[nodeName].lock()->asGroup(), std::string(filename), os.get());
   if (!wr.success()) {
     std::ostringstream oss;
     oss << "Error writing file " << filename << ": " << wr.message();
@@ -1054,7 +1055,7 @@ GroupNodePtr_t WindowsManager::getGroup(const std::string groupName,
     } else
       return GroupNodePtr_t();
   }
-  return it->second;
+  return it->second.lock();
 }
 
 Configuration WindowsManager::getNodeGlobalTransform(

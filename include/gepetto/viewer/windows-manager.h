@@ -57,9 +57,9 @@ class WindowsManager {
  private:
   typedef std::map<WindowID, WindowManagerPtr_t> WindowManagerMap_t;
   WindowManagerMap_t windowManagers_;
-  std::map<std::string, NodePtr_t> nodes_;
-  std::map<std::string, GroupNodePtr_t> groupNodes_;
-  std::map<std::string, RoadmapViewerPtr_t> roadmapNodes_;
+  std::map<std::string, NodeWeakPtr> nodes_;
+  std::map<std::string, GroupNodeWeakPtr> groupNodes_;
+  std::map<std::string, RoadmapViewerWeakPtr> roadmapNodes_;
   Mutex osgFrameMtx_;
   BlenderFrameCapture blenderCapture_;
 
@@ -68,7 +68,7 @@ class WindowsManager {
   static VisibilityMode getVisibility(const std::string& visibilityName);
   static WireFrameMode getWire(const std::string& wireName);
   static LightingMode getLight(const std::string& lightName);
-  NodePtr_t find(const std::string name,
+  NodeWeakPtr find(const std::string name,
                  GroupNodePtr_t group = GroupNodePtr_t());
   void initParent(NodePtr_t node, GroupNodePtr_t parent);
   bool loadUDRF(const std::string& urdfName, const std::string& urdfPath,
