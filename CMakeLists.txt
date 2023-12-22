@@ -13,7 +13,7 @@
 # details.  You should have received a copy of the GNU Lesser General Public
 # License along with gepetto-viewer  If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.10)
 
 set(PROJECT_NAME gepetto-viewer)
 set(PROJECT_DESCRIPTION "An user-friendly Graphical Interface")
@@ -110,9 +110,9 @@ install(
   DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/fonts
   PERMISSIONS OWNER_READ GROUP_READ WORLD_READ OWNER_WRITE)
 
-add_required_dependency("openscenegraph >= 3.2")
-add_required_dependency("openthreads >= 2.6")
-add_osgqt_dependency()
+add_project_dependency(vsg)
+#add_required_dependency("openthreads >= 2.6")
+add_project_dependency(vsgQt)
 # Must be after ADD_OSGQT_DEPENDENCY
 add_qt_dependency()
 add_optional_dependency("qgv")
