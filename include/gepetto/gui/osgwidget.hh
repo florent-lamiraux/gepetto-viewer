@@ -17,6 +17,7 @@
 #ifndef GEPETTO_GUI_OSGWIDGET_HH
 #define GEPETTO_GUI_OSGWIDGET_HH
 
+#include <vsg/ui/PointerEvent.h>
 #include <gepetto/gui/fwd.hh>
 // This include must be include before any other Qt include for GLDEBUGPROC
 #include <gepetto/viewer/config-osg.h>
@@ -25,10 +26,10 @@
 #include <QString>
 #include <QThread>
 #include <QTimer>
-#include <osg/ref_ptr>
-#include <osgQt/GraphicsWindowQt>
-#include <osgViewer/ViewerBase>
-#include <osgViewer/ViewerEventHandlers>
+#include <vsg/core/ref_ptr.h>
+#include <vsgQt/Window.h>
+#include <vsgQt/Viewer.h>
+//#include <vsgViewer/ViewerEventHandlers>
 
 class QToolBar;
 class QProcess;
@@ -45,9 +46,7 @@ class OSGWidget : public QWidget {
   Q_OBJECT
  public:
   OSGWidget(WindowsManagerPtr_t wm, const std::string& name, MainWindow* parent,
-            Qt::WindowFlags f = 0,
-            osgViewer::ViewerBase::ThreadingModel threadingModel =
-                osgViewer::Viewer::ThreadPerContext);
+            Qt::WindowFlags f = 0);
 
   virtual ~OSGWidget();
 

@@ -118,16 +118,15 @@ if(GEPETTO_GUI_HAS_PYTHONQT)
   target_link_libraries(${LIBRARY_NAME} PUBLIC ${PYTHON_LIBRARY})
 endif(GEPETTO_GUI_HAS_PYTHONQT)
 
-pkg_config_use_dependency(${LIBRARY_NAME} openscenegraph)
-pkg_config_use_dependency(${LIBRARY_NAME} ${OSGQT_DEPENDENCY})
-pkg_config_use_dependency(${LIBRARY_NAME} openthreads)
+#pkg_config_use_dependency(${LIBRARY_NAME} ${VSGQT_DEPENDENCY})
+#pkg_config_use_dependency(${LIBRARY_NAME} openthreads)
 
 target_compile_definitions(
   ${LIBRARY_NAME}
   PRIVATE -DFFMPEG="${FFMPEG}"
   PUBLIC ${QT_DEFINITIONS})
 target_link_libraries(${LIBRARY_NAME} PUBLIC ${PROJECT_QT_LIBS}
-                                             ${PYTHONQT_LIBRARIES})
+                                             ${PYTHONQT_LIBRARIES} vsg::vsg)
 target_include_directories(
   ${LIBRARY_NAME}
   PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include> ${Boost_INCLUDE_DIR}
@@ -147,8 +146,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gui/main.cc.in
                ${CMAKE_CURRENT_BINARY_DIR}/gui/main.cc @ONLY)
 add_executable(gepetto-gui ${CMAKE_CURRENT_BINARY_DIR}/gui/main.cc)
 target_compile_definitions(gepetto-gui PUBLIC ${QT_DEFINITIONS})
-pkg_config_use_dependency(gepetto-gui openscenegraph)
-target_link_libraries(gepetto-gui PUBLIC ${LIBRARY_NAME})
+target_link_libraries(gepetto-gui PUBLIC ${LIBRARY_NAME} vsg::vsg)
 
 install(
   TARGETS gepetto-gui
@@ -158,7 +156,7 @@ install(
 
 # {{{ gvtools
 add_executable(gvtools gvtools.cpp)
-pkg_config_use_dependency(gvtools openscenegraph)
+target_link_libraries(gvtools vsg::vsg)
 
 install(TARGETS gvtools DESTINATION bin)
 # }}}

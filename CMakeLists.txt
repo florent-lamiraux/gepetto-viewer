@@ -116,8 +116,8 @@ add_project_dependency(vsg)
 #add_required_dependency("openthreads >= 2.6")
 add_project_dependency(vsgQt)
 # Must be after ADD_OSGQT_DEPENDENCY
-#add_qt_dependency()
-#add_optional_dependency("qgv")
+add_qt_dependency()
+add_optional_dependency("qgv")
 
 # {{{ PythonQt settings
 

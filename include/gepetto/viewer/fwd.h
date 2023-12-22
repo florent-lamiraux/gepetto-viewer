@@ -24,6 +24,7 @@ DEF_CLASS_SMART_PTR(WindowManager)
 DEF_CLASS_SMART_PTR(RoadmapViewer)
 
 typedef std::string WindowID;
+typedef double value_type;
 } /* namespace viewer */
 } /* namespace gepetto */
 

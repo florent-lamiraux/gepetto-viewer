@@ -34,7 +34,7 @@ using boost::weak_ptr;
 #endif
 #endif
 
-#include <osg/ref_ptr>
+#include <vsg/core/ref_ptr.h>
 
 /** Define default asserting macro */
 #define ASSERT(condition, message)                                       \
@@ -58,8 +58,8 @@ using boost::weak_ptr;
 
 #define DEF_OSG_CLASS_REF_PTR(className)               \
   /*class className;*/                                 \
-  typedef ::osg::ref_ptr<className> className##RefPtr; \
-  typedef ::osg::observer_ptr<className> className##ObserverPtr;
+  typedef ::vsg::ref_ptr<className> className##RefPtr; \
+  typedef ::vsg::observer_ptr<className> className##ObserverPtr;
 
 #define SCENE_VIEWER_ACCEPT_VISITOR      \
   /** Accept NodeVisitor */              \

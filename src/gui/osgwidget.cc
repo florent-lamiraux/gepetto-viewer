@@ -61,8 +61,7 @@
 namespace gepetto {
 namespace gui {
 OSGWidget::OSGWidget(WindowsManagerPtr_t wm, const std::string& name,
-                     MainWindow* parent, Qt::WindowFlags f,
-                     osgViewer::ViewerBase::ThreadingModel threadingModel)
+                     MainWindow* parent, Qt::WindowFlags f)
     : QWidget(parent, f),
       graphicsWindow_(),
       wsm_(wm),
@@ -84,7 +83,7 @@ OSGWidget::OSGWidget(WindowsManagerPtr_t wm, const std::string& name,
   wid_ = wm->createWindow(name, this, viewer_, graphicsWindow_.get());
   wm_ = wsm_->getWindowManager(wid_);
 
-  viewer_->setThreadingModel(threadingModel);
+  //viewer_->setThreadingModel(threadingModel);
 
   osgQt::GLWidget* glWidget = graphicsWindow_->getGLWidget();
   // glWidget->setForwardKeyEvents(true);

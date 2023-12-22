@@ -14,92 +14,99 @@
 #include <gepetto/viewer/macros.h>
 
 #include <QMetaType>
-#include <osg/AlphaFunc>
-#include <osg/AutoTransform>
-#include <osg/BlendFunc>
-#include <osg/Camera>
-#include <osg/ClearNode>
-#include <osg/Depth>
-#include <osg/Geode>
-#include <osg/Geometry>
-#include <osg/GraphicsContext>
-#include <osg/Group>
-#include <osg/Light>
-#include <osg/LightSource>
-#include <osg/LineWidth>
-#include <osg/Material>
-#include <osg/MatrixTransform>
-#include <osg/Node>
-#include <osg/PolygonMode>
-#include <osg/PositionAttitudeTransform>
-#include <osg/Shape>
-#include <osg/ShapeDrawable>
-#include <osg/State>
-#include <osg/StateSet>
-#include <osg/Switch>
-#include <osg/Viewport>
-#include <osgViewer/Viewer>
-#include <osgViewer/ViewerBase>
+//#include <osg/AlphaFunc>
+//#include <osg/AutoTransform>
+//#include <osg/BlendFunc>
+#include <vsg/app/Camera.h>
+//#include <osg/ClearNode>
+//#include <osg/Depth>
+//#include <osg/Geode>
+#include <vsg/nodes/Geometry.h>
+#include <vsg/vk/Context.h>
+//#include <osg/GraphicsContext>
+//#include <osg/Group>
+#include <vsg/nodes/Group.h>
+//#include <osg/Light>
+//#include <osg/LightSource>
+#include <vsg/nodes/Light.h>
+//#include <osg/LineWidth>
+#include <vsg/commands/SetLineWidth.h>
+//#include <osg/Material>
+#include <vsg/state/material.h>
+//#include <osg/MatrixTransform>
+#include <vsg/nodes/MatrixTransform.h>
+//#include <osg/Node>
+#include <vsg/nodes/Node.h>
+//#include <osg/PolygonMode>
+//#include <osg/PositionAttitudeTransform>
+//#include <osg/Shape>
+//#include <osg/ShapeDrawable>
+//#include <osg/State>
+#include <vsg/vk/State.h>
+//#include <osg/StateSet>
+//#include <osg/Switch>
+#include <vsg/nodes/Switch.h>
+//#include <osg/Viewport>
+#include <vsg/state/ViewportState.h>
+//#include <osgViewer/Viewer>
+#include <vsg/app/Viewer.h>
+//#include <osgViewer/ViewerBase>
 
-namespace osg {
+namespace vsg {
 
 DEF_CLASS_SMART_PTR(Geode)
 
-DEF_OSG_CLASS_REF_PTR(Sphere)
-DEF_OSG_CLASS_REF_PTR(Box)
-DEF_OSG_CLASS_REF_PTR(Cone)
-DEF_OSG_CLASS_REF_PTR(Cylinder)
-DEF_OSG_CLASS_REF_PTR(Capsule)
-DEF_OSG_CLASS_REF_PTR(ShapeDrawable)
+// DEF_OSG_CLASS_REF_PTR(Sphere)
+// DEF_OSG_CLASS_REF_PTR(Box)
+// DEF_OSG_CLASS_REF_PTR(Cone)
+// DEF_OSG_CLASS_REF_PTR(Cylinder)
+// DEF_OSG_CLASS_REF_PTR(Capsule)
+//DEF_OSG_CLASS_REF_PTR(ShapeDrawable)
 DEF_OSG_CLASS_REF_PTR(Geometry)
-DEF_OSG_CLASS_REF_PTR(LineWidth)
+DEF_OSG_CLASS_REF_PTR(SetLineWidth)
 
 DEF_OSG_CLASS_REF_PTR(Geode)
-DEF_OSG_CLASS_REF_PTR(PositionAttitudeTransform)
-DEF_OSG_CLASS_REF_PTR(AutoTransform)
+//DEF_OSG_CLASS_REF_PTR(PositionAttitudeTransform)
+//DEF_OSG_CLASS_REF_PTR(AutoTransform)
 DEF_OSG_CLASS_REF_PTR(MatrixTransform)
 DEF_OSG_CLASS_REF_PTR(Light)
-DEF_OSG_CLASS_REF_PTR(LightSource)
+//DEF_OSG_CLASS_REF_PTR(LightSource)
 
 DEF_OSG_CLASS_REF_PTR(Node)
 DEF_OSG_CLASS_REF_PTR(Group)
 DEF_OSG_CLASS_REF_PTR(Switch)
-DEF_OSG_CLASS_REF_PTR(ClearNode)
+//DEF_OSG_CLASS_REF_PTR(ClearNode)
 
-DEF_OSG_CLASS_REF_PTR(Depth)
+//DEF_OSG_CLASS_REF_PTR(Depth)
 
-DEF_OSG_CLASS_REF_PTR(AlphaFunc)
-DEF_OSG_CLASS_REF_PTR(BlendFunc)
-DEF_OSG_CLASS_REF_PTR(StateSet)
+//DEF_OSG_CLASS_REF_PTR(AlphaFunc)
+//DEF_OSG_CLASS_REF_PTR(BlendFunc)
 
 DEF_OSG_CLASS_REF_PTR(State)
-DEF_OSG_CLASS_REF_PTR(StateSet)
+//DEF_OSG_CLASS_REF_PTR(StateSet)
 
-DEF_OSG_CLASS_REF_PTR(Material)
+//DEF_OSG_CLASS_REF_PTR(Material)
 
 DEF_OSG_CLASS_REF_PTR(Camera)
-DEF_OSG_CLASS_REF_PTR(Viewport)
-DEF_OSG_CLASS_REF_PTR(GraphicsContext)
+//DEF_OSG_CLASS_REF_PTR(Viewport)
+//DEF_OSG_CLASS_REF_PTR(GraphicsContext)
 
-DEF_OSG_CLASS_REF_PTR(Vec3Array)
-DEF_OSG_CLASS_REF_PTR(Vec4Array)
+//DEF_OSG_CLASS_REF_PTR(Vec3Array)
+//DEF_OSG_CLASS_REF_PTR(Vec4Array)
 
-DEF_OSG_CLASS_REF_PTR(PolygonMode)
+//DEF_OSG_CLASS_REF_PTR(PolygonMode)
 
-typedef ::osg::ref_ptr<GraphicsContext::Traits> TraitsRefPtr;
+//typedef ::osg::ref_ptr<GraphicsContext::Traits> TraitsRefPtr;
 
-} /* namespace osg */
-
-namespace osgViewer {
 DEF_OSG_CLASS_REF_PTR(Viewer)
 
-} /* namespace osgViewer */
+} /* namespace vsg */
 
-typedef ::osg::Vec2f osgVector2;
-typedef ::osg::Vec3f osgVector3;
-typedef ::osg::Vec4f osgVector4;
+typedef ::vsg::t_vec2<gepetto::viewer::value_type> osgVector2;
+typedef ::vsg::t_vec3<gepetto::viewer::value_type> osgVector3;
+typedef ::vsg::t_vec4<gepetto::viewer::value_type> osgVector4;
 
-typedef ::osg::Quat osgQuat;
+typedef ::vsg::t_quat<gepetto::viewer::value_type> osgQuat;
 
 namespace gepetto {
 namespace viewer {
@@ -132,7 +139,6 @@ struct Configuration {
     return position != other.position || quat != other.quat;
   }
 
-  bool valid() const { return position.valid() && quat.asVec4().valid(); }
 };
 
 } /* namespace viewer */
