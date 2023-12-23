@@ -110,15 +110,16 @@ install(
   DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/fonts
   PERMISSIONS OWNER_READ GROUP_READ WORLD_READ OWNER_WRITE)
 
+findpython()
+
 add_project_dependency(vsg)
 #add_required_dependency("openthreads >= 2.6")
 add_project_dependency(vsgQt)
 # Must be after ADD_OSGQT_DEPENDENCY
-add_qt_dependency()
-add_optional_dependency("qgv")
+#add_qt_dependency()
+#add_optional_dependency("qgv")
 
 # {{{ PythonQt settings
-findpython()
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake-module/ ${CMAKE_MODULE_PATH})
 # If GEPETTO_GUI_HAS_PYTHONQT is set to TRUE, then PythonQt is required.
@@ -166,7 +167,7 @@ if(NOT FFMPEG)
     # Fallback to old behavior: ffmpeg / avconv non-availability at configure
     # time doesn't mean anything at run time.
     set(FFMPEG "ffmpeg")
-  endif(FFMPEG)
+  endif(AVCONV)
 endif(NOT FFMPEG)
 
 configure_file(${CMAKE_SOURCE_DIR}/include/gepetto/gui/config-dep.hh.in
