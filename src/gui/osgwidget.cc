@@ -85,7 +85,7 @@ OSGWidget::OSGWidget(WindowsManagerPtr_t wm, const std::string& name,
 
   //viewer_->setThreadingModel(threadingModel);
 
-  osgQt::GLWidget* glWidget = graphicsWindow_->getGLWidget();
+  vsgQt::GLWidget* glWidget = graphicsWindow_->getGLWidget();
   // glWidget->setForwardKeyEvents(true);
   QVBoxLayout* hblayout = new QVBoxLayout(this);
   hblayout->setContentsMargins(1, 1, 1, 1);
@@ -321,7 +321,7 @@ void OSGWidget::setFixedSize(bool fixedSize) {
     // Cast to Vector2Property
     viewer::Vector2Property& vsize(
         dynamic_cast<viewer::Vector2Property&>(size));
-    osgQt::GLWidget* glWidget = graphicsWindow_->getGLWidget();
+    vsgQt::GLWidget* glWidget = graphicsWindow_->getGLWidget();
     if (fixedSize) {
       glWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
       // Add write access
@@ -341,7 +341,7 @@ void OSGWidget::setFixedSize(bool fixedSize) {
 }
 
 void OSGWidget::setWindowDimension(const osgVector2& size) {
-  osgQt::GLWidget* glWidget = graphicsWindow_->getGLWidget();
+  vsgQt::GLWidget* glWidget = graphicsWindow_->getGLWidget();
   if (isFixedSize()) {
     glWidget->resize((int)size[0], (int)size[1]);
     glWidget->setMinimumSize((int)size[0], (int)size[1]);
@@ -420,7 +420,7 @@ void OSGWidget::initGraphicsWindowsAndViewer(MainWindow* parent,
   traits_ptr->vsync = true;
   //  traits_ptr->sharedContext = 0;
 
-  graphicsWindow_ = new osgQt::GraphicsWindowQt(traits_ptr);
+  graphicsWindow_ = new vsgQt::GraphicsWindowQt(traits_ptr);
 
   osg::Camera* camera = viewer_->getCamera();
   camera->setGraphicsContext(graphicsWindow_);

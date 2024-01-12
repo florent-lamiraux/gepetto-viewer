@@ -87,7 +87,7 @@ class OSGWidget : public QWidget {
   void initGraphicsWindowsAndViewer(MainWindow* parent,
                                     const std::string& name);
 
-  vsg::ref_ptr<osgQt::GraphicsWindowQt> graphicsWindow_;
+  vsg::ref_ptr<vsgQt::GraphicsWindowQt> graphicsWindow_;
   WindowsManagerPtr_t wsm_;
   vsg::ref_ptr<PickHandler> pickHandler_;
   WindowID wid_;
