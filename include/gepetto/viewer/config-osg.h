@@ -96,7 +96,7 @@ DEF_OSG_CLASS_REF_PTR(Camera)
 
 //DEF_OSG_CLASS_REF_PTR(PolygonMode)
 
-//typedef ::osg::ref_ptr<GraphicsContext::Traits> TraitsRefPtr;
+//typedef ::vsg::ref_ptr<GraphicsContext::Traits> TraitsRefPtr;
 
 DEF_OSG_CLASS_REF_PTR(Viewer)
 

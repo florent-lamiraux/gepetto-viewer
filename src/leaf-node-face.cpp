@@ -193,12 +193,12 @@ void LeafNodeFace::setColor(const osgVector4& color) {
 }
 
 void LeafNodeFace::setTexture(const std::string& image_path) {
-  osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
+  vsg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
   // Do not resize image to closest power of two values for width and height
   texture->setResizeNonPowerOfTwoHint(false);
   // Disable interpolation between pixels.
   texture->setFilter(osg::Texture::MAG_FILTER, osg::Texture::NEAREST);
-  osg::ref_ptr<osg::Image> image = osgDB::readImageFile(image_path);
+  vsg::ref_ptr<osg::Image> image = osgDB::readImageFile(image_path);
   if (!image) {
     log() << "couldn't find texture " << image_path << ", quiting."
           << std::endl;

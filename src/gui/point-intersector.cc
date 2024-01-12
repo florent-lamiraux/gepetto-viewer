@@ -24,7 +24,7 @@ PointIntersector::PointIntersector(CoordinateFrame cf, double x, double y)
 osgUtil::Intersector* PointIntersector::clone(
     osgUtil::IntersectionVisitor& iv) {
   if (_coordinateFrame == MODEL && iv.getModelMatrix() == 0) {
-    osg::ref_ptr<PointIntersector> cloned = new PointIntersector(_start, _end);
+    vsg::ref_ptr<PointIntersector> cloned = new PointIntersector(_start, _end);
     cloned->_parent = this;
     cloned->_pickBias = _pickBias;
     return cloned.release();
@@ -53,7 +53,7 @@ osgUtil::Intersector* PointIntersector::clone(
   }
 
   osg::Matrix inverse = osg::Matrix::inverse(matrix);
-  osg::ref_ptr<PointIntersector> cloned =
+  vsg::ref_ptr<PointIntersector> cloned =
       new PointIntersector(_start * inverse, _end * inverse);
   cloned->_parent = this;
   cloned->_pickBias = _pickBias;

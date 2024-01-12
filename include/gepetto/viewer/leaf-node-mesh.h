@@ -72,7 +72,7 @@ class LeafNodeMesh : public Node {
   void setTexture(const std::string& image_path);
 
   virtual void setAlpha(const float& alpha);
-  virtual osg::ref_ptr<osg::Node> getOsgNode() const;
+  virtual vsg::ref_ptr<osg::Node> getOsgNode() const;
 
   SCENE_VIEWER_ACCEPT_VISITOR;
 

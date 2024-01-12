@@ -31,13 +31,13 @@ void LeafNodeMesh::init() {
 
   /* Allow transparency */
   if (mesh_geometry_ptr_->getOrCreateStateSet()) {
-    osg::ref_ptr<osg::StateSet> nodess(
+    vsg::ref_ptr<osg::StateSet> nodess(
         mesh_geometry_ptr_->getOrCreateStateSet());
     nodess->setMode(GL_BLEND, ::osg::StateAttribute::OFF);
     // Create Material and assign color.
 
     // Creating the material object
-    osg::ref_ptr<osg::Material> mat(new osg::Material);
+    vsg::ref_ptr<osg::Material> mat(new osg::Material);
 
     // Attaching the newly defined state set object to the node state set
     mat->setColorMode(osg::Material::AMBIENT_AND_DIFFUSE);
@@ -109,7 +109,7 @@ void LeafNodeMesh::setColor(const osgVector4& color_diffuse,
                             const osgVector4& color_specular,
                             const osgVector4& color_emissive) {
   // setColor(collada_ptr_,color);
-  osg::ref_ptr<osg::Material> mat_ptr(new osg::Material);
+  vsg::ref_ptr<osg::Material> mat_ptr(new osg::Material);
   osgVector4 color_zero(0.0f, 0.0f, 0.0f, 0.0f);
   mat_ptr->setDiffuse(osg::Material::FRONT_AND_BACK, color_diffuse);
   mat_ptr->setAmbient(osg::Material::FRONT_AND_BACK, color_zero);
@@ -147,9 +147,9 @@ void LeafNodeMesh::setAlpha(const float& alpha) {
 }
 
 void LeafNodeMesh::setTexture(const std::string& image_path) {
-  osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
+  vsg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
   texture->setDataVariance(osg::Object::DYNAMIC);
-  osg::ref_ptr<osg::Image> image = osgDB::readImageFile(image_path);
+  vsg::ref_ptr<osg::Image> image = osgDB::readImageFile(image_path);
   if (!image) {
     log() << "couldn't find texture " << image_path << ", quiting."
           << std::endl;
@@ -161,7 +161,7 @@ void LeafNodeMesh::setTexture(const std::string& image_path) {
   setDirty();
 }
 
-osg::ref_ptr<osg::Node> LeafNodeMesh::getOsgNode() const { return geode_ptr_; }
+vsg::ref_ptr<osg::Node> LeafNodeMesh::getOsgNode() const { return geode_ptr_; }
 
 void LeafNodeMesh::setVertexArray(osg::Vec3ArrayRefPtr arrayOfVertices) {
   mesh_geometry_ptr_->setVertexArray(arrayOfVertices);

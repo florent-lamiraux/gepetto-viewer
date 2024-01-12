@@ -38,7 +38,7 @@ struct NodeConfiguration : Configuration {
 
 struct BlenderFrameCapture {
   typedef std::vector<NodePtr_t> Nodes_t;
-  osg::ref_ptr<TransformWriterVisitor> writer_visitor_;
+  vsg::ref_ptr<TransformWriterVisitor> writer_visitor_;
   Nodes_t nodes_;
   BlenderFrameCapture();
   void captureFrame();

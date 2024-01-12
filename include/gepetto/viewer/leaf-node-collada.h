@@ -34,7 +34,7 @@ class LeafNodeCollada : public Node {
   BackfaceDrawingProperty backfaceDrawing_;
 
   /** Save options to properly destroy mesh when deleting the node */
-  osg::ref_ptr<osgDB::Options> options_;
+  vsg::ref_ptr<osgDB::Options> options_;
 
   void init();
 
@@ -95,7 +95,7 @@ class LeafNodeCollada : public Node {
   const std::string& textureFilePath() const;
 
   virtual void setAlpha(const float& alpha);
-  virtual osg::ref_ptr<osg::Node> getOsgNode() const;
+  virtual vsg::ref_ptr<osg::Node> getOsgNode() const;
 
   /// Remove any osg::LightSource of this mesh.
   void removeLightSources();

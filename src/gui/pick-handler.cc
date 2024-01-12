@@ -122,7 +122,7 @@ void PickHandler::computeLineIntersection(osgGA::GUIActionAdapter& aa,
     // On the contrary, locking here creates a deadlock as the lock is
     // already acquired by OSGWidget::paintEvent.
     // wsm_->lock().lock();
-    // osg::ref_ptr<osgUtil::LineSegmentIntersector> intersector =
+    // vsg::ref_ptr<osgUtil::LineSegmentIntersector> intersector =
     // new osgUtil::LineSegmentIntersector(osgUtil::Intersector::WINDOW, x, y);
     // intersector->setIntersectionLimit( osgUtil::Intersector::LIMIT_NEAREST );
 

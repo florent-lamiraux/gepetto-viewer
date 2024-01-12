@@ -23,7 +23,7 @@ class LeafNodeLine : public Node {
 
   /** Geometry */
   ::osg::GeometryRefPtr beam_ptr_;
-  ::osg::ref_ptr< ::osg::DrawArrays> drawArray_ptr_;
+  ::vsg::ref_ptr< ::osg::DrawArrays> drawArray_ptr_;
   ::osg::Vec3ArrayRefPtr points_ptr_;
   ::osg::Vec4ArrayRefPtr color_ptr_;
 

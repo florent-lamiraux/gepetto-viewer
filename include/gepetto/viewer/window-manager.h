@@ -43,17 +43,17 @@ class WindowManager : public GroupNode {
   ::osg::GeometryRefPtr bg_geom_;
 
   /* OSG Screen capture handler */
-  osg::ref_ptr< ::osgViewer::ScreenCaptureHandler> screen_capture_ptr_;
+  vsg::ref_ptr< ::osgViewer::ScreenCaptureHandler> screen_capture_ptr_;
 
   /** Heads-Up Display (HUD) camera */
   ::osg::CameraRefPtr hud_camera_;
-  osg::ref_ptr<osgText::Text> texts_[3][3];
-  osg::ref_ptr<osg::Geode> textGeode_;
+  vsg::ref_ptr<osgText::Text> texts_[3][3];
+  vsg::ref_ptr<osg::Geode> textGeode_;
   bool textActive_[3][3];
 
   bool lastSceneWasDisrty_;
 
-  osg::ref_ptr<osgGA::KeySwitchMatrixManipulator> manipulator_ptr;
+  vsg::ref_ptr<osgGA::KeySwitchMatrixManipulator> manipulator_ptr;
   /** Associated weak pointer */
   WindowManagerWeakPtr weak_ptr_;
 

@@ -178,7 +178,7 @@ class Node : public Properties {
   /** Set the color of the object */
   virtual void setColor(const osgVector4& color) = 0;
 
-  virtual osg::ref_ptr<osg::Node> getOsgNode() const;
+  virtual vsg::ref_ptr<osg::Node> getOsgNode() const;
 
   /**
    \brief Return the root node to include it in the scene

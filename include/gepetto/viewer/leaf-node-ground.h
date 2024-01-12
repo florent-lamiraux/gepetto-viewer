@@ -34,7 +34,7 @@ class LeafNodeGround : public Node {
 
   /** Associated Geometry for LeafNodeGround */
   ::osg::GeometryRefPtr grid_geometry_ptr_;
-  ::osg::ref_ptr< ::osg::DrawArrays> draw_array_ptr_;
+  ::vsg::ref_ptr< ::osg::DrawArrays> draw_array_ptr_;
 
   /** Init method */
   void init();

@@ -1013,7 +1013,7 @@ bool WindowsManager::writeNodeFile(const std::string& nodeName,
                                    const std::string& filename) {
   RETURN_FALSE_IF_NODE_DOES_NOT_EXIST(nodeName);
   ScopedLock lock(osgFrameMutex());
-  osg::ref_ptr<osgDB::Options> os = new osgDB::Options;
+  vsg::ref_ptr<osgDB::Options> os = new osgDB::Options;
   os->setOptionString("NoExtras");
   osgDB::ReaderWriter::WriteResult wr = osgDB::Registry::instance()->writeNode(
       *nodes_[nodeName]->asGroup(), std::string(filename), os.get());

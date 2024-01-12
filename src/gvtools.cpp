@@ -71,8 +71,8 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  osg::ref_ptr<osg::Node> input = osgDB::readNodeFile(inputFilename);
-  osg::ref_ptr<osg::LOD> lod = new osg::LOD;
+  vsg::ref_ptr<osg::Node> input = osgDB::readNodeFile(inputFilename);
+  vsg::ref_ptr<osg::LOD> lod = new osg::LOD;
   osgUtil::Simplifier simplifier;
 
   for (std::size_t i = 0; i < ratios.size(); ++i) {
@@ -80,7 +80,7 @@ int main(int argc, char** argv) {
               << maxDists[i] << std::endl;
 
     ratio = ratios[i];
-    osg::ref_ptr<osg::Node> simplified;
+    vsg::ref_ptr<osg::Node> simplified;
     if (ratio == 1) {
       simplified = input;
     } else {

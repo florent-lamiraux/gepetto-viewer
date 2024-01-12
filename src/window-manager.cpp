@@ -35,7 +35,7 @@ void ScreenShot::operator()(osg::RenderInfo& renderInfo) const {
   osg::Timer* timer = osg::Timer::instance();
   osg::Timer_t tick_start = timer->tick();
 
-  osg::ref_ptr<osg::Image> image = new osg::Image;
+  vsg::ref_ptr<osg::Image> image = new osg::Image;
   assert(renderInfo.getState());
   osg::GraphicsContext* gc = renderInfo.getState()->getGraphicsContext();
   assert(gc);
@@ -100,7 +100,7 @@ struct ResizeHandler : osgGA::GUIEventHandler {
     return true;
   }
 
-  osg::ref_ptr<osgText::Text> texts_[3][3];
+  vsg::ref_ptr<osgText::Text> texts_[3][3];
   osg::observer_ptr<osg::Camera> camera_;
 };
 
@@ -155,7 +155,7 @@ void WindowManager::createBackground() {
   const osg::Node::NodeMask mask = ~IntersectionBit;
   bg_camera_->setNodeMask(mask);
 
-  osg::ref_ptr<const osg::GraphicsContext::Traits> traits_ptr =
+  vsg::ref_ptr<const osg::GraphicsContext::Traits> traits_ptr =
       gc_->getTraits();
 
   // set the projection matrix
@@ -221,7 +221,7 @@ void WindowManager::createBackground() {
 
 void WindowManager::createHUDcamera() {
   // Create HUD camera
-  osg::ref_ptr<const osg::GraphicsContext::Traits> traits_ptr =
+  vsg::ref_ptr<const osg::GraphicsContext::Traits> traits_ptr =
       gc_->getTraits();
 
   hud_camera_ = new osg::Camera;
@@ -242,10 +242,10 @@ void WindowManager::createHUDcamera() {
   hud_camera_->addChild(textGeode_);
 
   ResizeHandler* rh = new ResizeHandler(hud_camera_);
-  static osg::ref_ptr<osgText::Font> font = defaultFont();
+  static vsg::ref_ptr<osgText::Font> font = defaultFont();
   for (int i = 0; i < 3; ++i)
     for (int j = 0; j < 3; ++j) {
-      osg::ref_ptr<osgText::Text>& text = texts_[i][j];
+      vsg::ref_ptr<osgText::Text>& text = texts_[i][j];
       text = new osgText::Text;
       text->setAxisAlignment(osgText::TextBase::XY_PLANE);
       text->setDataVariance(osg::Object::DYNAMIC);
@@ -335,7 +335,7 @@ void WindowManager::createHUDcamera() {
 
 std::string WindowManager::getText(TextAlignment vPos,
                                    TextAlignment hPos) const {
-  osg::ref_ptr<osgText::Text> text = texts_[vPos][hPos];
+  vsg::ref_ptr<osgText::Text> text = texts_[vPos][hPos];
   if (!text)
     return std::string();
   else
@@ -356,7 +356,7 @@ void WindowManager::setText(TextAlignment vPos, TextAlignment hPos,
     return;
   }
 
-  osg::ref_ptr<osgText::Text>& text = texts_[vPos][hPos];
+  vsg::ref_ptr<osgText::Text>& text = texts_[vPos][hPos];
   if (!textActive_[vPos][hPos]) {
     textGeode_->addDrawable(text);
     textActive_[vPos][hPos] = true;
@@ -384,7 +384,7 @@ void WindowManager::applyBackgroundColor() {
 }
 
 void WindowManager::captureFrame(const std::string& filename) {
-  osg::ref_ptr<ScreenShot> screenshot_ = new ScreenShot(filename);
+  vsg::ref_ptr<ScreenShot> screenshot_ = new ScreenShot(filename);
   main_camera_->setFinalDrawCallback(screenshot_);
   viewer_ptr_->renderingTraversals();
   main_camera_->setFinalDrawCallback(0);
@@ -410,7 +410,7 @@ void WindowManager::init(const unsigned int& x, const unsigned int& y,
   traits_ptr->readDISPLAY();
   traits_ptr->setUndefinedScreenDetailsToDefaultScreen();
 
-  osg::ref_ptr<osg::GraphicsContext> gc =
+  vsg::ref_ptr<osg::GraphicsContext> gc =
       osg::GraphicsContext::createGraphicsContext(traits_ptr);
 
   init(gc.get());
@@ -648,7 +648,7 @@ void WindowManager::startCapture(const std::string& filename,
   }
   /* Create an handler to save video */
   typedef osgViewer::ScreenCaptureHandler SCH_t;
-  osg::ref_ptr<WriteToFile> wtf = new WriteToFile(filename, extension);
+  vsg::ref_ptr<WriteToFile> wtf = new WriteToFile(filename, extension);
   screen_capture_ptr_ = new SCH_t(wtf.get(), -1);
   /* Screen capture can be stopped with stopCapture */
   screen_capture_ptr_->setKeyEventTakeScreenShot(0);
@@ -673,7 +673,7 @@ void WindowManager::stopCapture() {
 }
 
 bool WindowManager::writeNodeFile(const std::string& fn) {
-  osg::ref_ptr<osgDB::Options> options = new osgDB::Options;
+  vsg::ref_ptr<osgDB::Options> options = new osgDB::Options;
   options->setOptionString("NoExtras");
   return osgDB::writeNodeFile(*(viewer_ptr_->getSceneData()), fn,
                               options.get());

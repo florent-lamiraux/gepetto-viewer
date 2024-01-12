@@ -92,7 +92,7 @@ class TransformWriterVisitor : public NodeVisitor {
 
   virtual void apply(Node& node);
 
-  osg::ref_ptr<TransformWriter> writer_;
+  vsg::ref_ptr<TransformWriter> writer_;
 }; /* class TransformWriterVisitor */
 
 template <typename Iterator>

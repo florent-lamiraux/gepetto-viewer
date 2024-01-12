@@ -408,7 +408,7 @@ void OSGWidget::initToolBar() {
 void OSGWidget::initGraphicsWindowsAndViewer(MainWindow* parent,
                                              const std::string& name) {
   osg::DisplaySettings* ds = osg::DisplaySettings::instance().get();
-  osg::ref_ptr<osg::GraphicsContext::Traits> traits_ptr(
+  vsg::ref_ptr<osg::GraphicsContext::Traits> traits_ptr(
       new osg::GraphicsContext::Traits(ds));
   traits_ptr->windowName = name;
   traits_ptr->x = this->x();
@@ -437,7 +437,7 @@ void OSGWidget::initGraphicsWindowsAndViewer(MainWindow* parent,
   viewer_->setKeyEventSetsDone(0);
 
   // Manipulators
-  osg::ref_ptr<osgGA::KeySwitchMatrixManipulator> keyswitchManipulator =
+  vsg::ref_ptr<osgGA::KeySwitchMatrixManipulator> keyswitchManipulator =
       new osgGA::KeySwitchMatrixManipulator;
   keyswitchManipulator->addMatrixManipulator('1', "Trackball",
                                              new osgGA::TrackballManipulator());

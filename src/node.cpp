@@ -695,7 +695,7 @@ const Configuration& Node::getGlobalTransform() const { return M_.value; }
 
 void Node::traverse(NodeVisitor& /*visitor*/) {}
 
-osg::ref_ptr<osg::Node> Node::getOsgNode() const { return geode_ptr_.get(); }
+vsg::ref_ptr<osg::Node> Node::getOsgNode() const { return geode_ptr_.get(); }
 
 /* End of declaration of public function members */
 

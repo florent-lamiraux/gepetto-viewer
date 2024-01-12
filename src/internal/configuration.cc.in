@@ -17,9 +17,9 @@
 #include <../src/internal/configuration.hh>
 
 namespace gepetto {
-  osg::ref_ptr<osgText::Font> defaultFont ()
+  vsg::ref_ptr<osgText::Font> defaultFont ()
   {
-    static osg::ref_ptr<osgText::Font> font = osgText::readFontFile("@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_DATAROOTDIR@/@PROJECT_NAME@/fonts/arial.ttf");
+    static vsg::ref_ptr<osgText::Font> font = osgText::readFontFile("@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_DATAROOTDIR@/@PROJECT_NAME@/fonts/arial.ttf");
     return font;
   }
 

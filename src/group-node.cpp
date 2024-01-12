@@ -131,7 +131,7 @@ void GroupNode::traverse(NodeVisitor& visitor) {
   }
 }
 
-osg::ref_ptr<osg::Node> GroupNode::getOsgNode() const {
+vsg::ref_ptr<osg::Node> GroupNode::getOsgNode() const {
   return this->asQueue();
 }
 

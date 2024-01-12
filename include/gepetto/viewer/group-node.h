@@ -104,7 +104,7 @@ class GroupNode : public Node {
 
   void traverse(NodeVisitor& visitor);
 
-  virtual osg::ref_ptr<osg::Node> getOsgNode() const;
+  virtual vsg::ref_ptr<osg::Node> getOsgNode() const;
 
   SCENE_VIEWER_ACCEPT_VISITOR;
 

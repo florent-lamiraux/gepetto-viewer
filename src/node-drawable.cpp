@@ -39,9 +39,9 @@ osgVector4 NodeDrawable::getColor() const {
 }
 
 void NodeDrawable::setTexture(const std::string& image_path) {
-  osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
+  vsg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
   texture->setDataVariance(osg::Object::DYNAMIC);
-  osg::ref_ptr<osg::Image> image = osgDB::readImageFile(image_path);
+  vsg::ref_ptr<osg::Image> image = osgDB::readImageFile(image_path);
   if (!image) {
     std::cerr << " couldn't find texture " << image_path << ", quiting."
               << std::endl;

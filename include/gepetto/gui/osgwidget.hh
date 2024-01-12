@@ -87,15 +87,15 @@ class OSGWidget : public QWidget {
   void initGraphicsWindowsAndViewer(MainWindow* parent,
                                     const std::string& name);
 
-  osg::ref_ptr<osgQt::GraphicsWindowQt> graphicsWindow_;
+  vsg::ref_ptr<osgQt::GraphicsWindowQt> graphicsWindow_;
   WindowsManagerPtr_t wsm_;
-  osg::ref_ptr<PickHandler> pickHandler_;
+  vsg::ref_ptr<PickHandler> pickHandler_;
   WindowID wid_;
   WindowManagerPtr_t wm_;
   QTimer timer_;
   int nSuccessiveStaticFrames_;
   osgViewer::ViewerRefPtr viewer_;
-  osg::ref_ptr<osgViewer::ScreenCaptureHandler> screenCapture_;
+  vsg::ref_ptr<osgViewer::ScreenCaptureHandler> screenCapture_;
   QTemporaryDir* tmpDirectory_;
 
   QToolBar* toolBar_;

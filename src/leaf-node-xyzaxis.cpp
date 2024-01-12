@@ -31,19 +31,19 @@ inline osg::ShapeDrawableRefPtr arrowDrawable(
             lengthCon, radiusCon);
   cone->setRotation(rot);
 
-  osg::ref_ptr<osg::CompositeShape> shape = new osg::CompositeShape;
+  vsg::ref_ptr<osg::CompositeShape> shape = new osg::CompositeShape;
   shape->addChild(cylinder);
   shape->addChild(cone);
 
   return new ::osg::ShapeDrawable(shape);
 }
 
-osg::ref_ptr<osgText::Text> label(const char* text,
-                                  osg::ref_ptr<osgText::Font> font,
+vsg::ref_ptr<osgText::Text> label(const char* text,
+                                  vsg::ref_ptr<osgText::Font> font,
                                   const osgVector3& pos,
                                   const float& charSize) {
   osgVector4 black = osgVector4(0.f, 0.f, 0.f, 1.f);
-  osg::ref_ptr<osgText::Text> l = new osgText::Text;
+  vsg::ref_ptr<osgText::Text> l = new osgText::Text;
   l->setText(text);
   l->setFont(font);
   l->setCharacterSize(charSize);
@@ -89,7 +89,7 @@ inline PropertyPtr_t labelSize(const std::string t, osgText::TextBase* text) {
 /* Declaration of private function members */
 
 void LeafNodeXYZAxis::init() {
-  static osg::ref_ptr<osgText::Font> font = defaultFont();
+  static vsg::ref_ptr<osgText::Font> font = defaultFont();
 
   /* Create sphere object */
   sphere_ptr_ = new ::osg::Sphere();
@@ -115,7 +115,7 @@ void LeafNodeXYZAxis::init() {
     osgVector4 green = osgVector4(0.f, 1.f, 0.f, 1.f);
     osgVector4 red = osgVector4(1.f, 0.f, 0.f, 1.f);
 
-    osg::ref_ptr<osgText::Text> lbl;
+    vsg::ref_ptr<osgText::Text> lbl;
     osg::ShapeDrawableRefPtr arrow;
 
     /* X_AXIS */

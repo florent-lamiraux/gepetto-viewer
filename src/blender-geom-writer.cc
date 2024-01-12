@@ -303,7 +303,7 @@ void BlenderGeomWriterVisitor::apply(LeafNodeLine& node) {
     std::stringstream ss;
     ss << filename_ << "_curve" << nodeCount_ << ".dae";
     std::string fn = ss.str();
-    osg::ref_ptr<osgDB::Options> os = new osgDB::Options;
+    vsg::ref_ptr<osgDB::Options> os = new osgDB::Options;
     os->setOptionString("NoExtras");
     osgDB::writeNodeFile(*node.asGroup(), fn, os.get());
 

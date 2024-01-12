@@ -67,7 +67,7 @@ struct ObjectCache {
 
 ObjectCache object_cache;
 #else
-osg::ref_ptr<osgDB::ObjectCache> object_cache(new osgDB::ObjectCache);
+vsg::ref_ptr<osgDB::ObjectCache> object_cache(new osgDB::ObjectCache);
 #endif
 
 /* Declaration of private function members */
@@ -152,7 +152,7 @@ void LeafNodeCollada::init() {
         }
         // Apply scale
         if (scale != 1.) {
-          osg::ref_ptr<osg::MatrixTransform> xform = new osg::MatrixTransform;
+          vsg::ref_ptr<osg::MatrixTransform> xform = new osg::MatrixTransform;
           xform->setDataVariance(osg::Object::STATIC);
           xform->setMatrix(osg::Matrix::scale(scale, scale, scale));
           xform->addChild(collada_ptr_);
@@ -312,7 +312,7 @@ LeafNodeColladaPtr_t LeafNodeCollada::self(void) const {
 }
 
 void LeafNodeCollada::setColor(const osgVector4& color) {
-  osg::ref_ptr<osg::Material> mat_ptr(new osg::Material);
+  vsg::ref_ptr<osg::Material> mat_ptr(new osg::Material);
   osgVector4 ambient(color.r() * 0.5f, color.g() * 0.5f, color.b() * 0.5f,
                      color.a());
 
@@ -357,9 +357,9 @@ void LeafNodeCollada::setAlpha(const float& alpha) {
 
 void LeafNodeCollada::setTexture(const std::string& image_path) {
   texture_file_path_ = image_path;
-  osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
+  vsg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
   texture->setDataVariance(osg::Object::STATIC);
-  osg::ref_ptr<osg::Image> image = osgDB::readImageFile(image_path);
+  vsg::ref_ptr<osg::Image> image = osgDB::readImageFile(image_path);
   if (!image) {
     log() << " couldn't find texture, quiting." << std::endl;
     return;
@@ -403,7 +403,7 @@ color)
   }
 }*/
 
-osg::ref_ptr<osg::Node> LeafNodeCollada::getOsgNode() const {
+vsg::ref_ptr<osg::Node> LeafNodeCollada::getOsgNode() const {
   return collada_ptr_;
 }
 
@@ -419,7 +419,7 @@ void LeafNodeCollada::applyScale() {
   // Do not remove this brackets. See
   // https://github.com/openscenegraph/OpenSceneGraph/issues/1020
   {
-    osg::ref_ptr<osg::MatrixTransform> xform = new osg::MatrixTransform;
+    vsg::ref_ptr<osg::MatrixTransform> xform = new osg::MatrixTransform;
     xform->setMatrix(osg::Matrix::scale(scale));
     xform->setDataVariance(osg::Object::STATIC);
 
