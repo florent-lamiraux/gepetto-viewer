@@ -126,7 +126,7 @@ struct WriteToFile : osgViewer::ScreenCaptureHandler::CaptureOperation {
 }  // namespace
 
 void WindowManager::createManipulator() {
-  osgViewer::Viewer::Windows windows;
+  vsg::Viewer::Windows windows;
   viewer_ptr_->getWindows(windows);
   manipulator_ptr = new ::osgGA::KeySwitchMatrixManipulator;
   manipulator_ptr->addMatrixManipulator('1', "trackball",
@@ -417,7 +417,7 @@ void WindowManager::init(const unsigned int& x, const unsigned int& y,
 }
 
 void WindowManager::init(osg::GraphicsContext* gc) {
-  ::osgViewer::ViewerRefPtr viewer = new ::osgViewer::Viewer();
+  ::vsg::ViewerRefPtr viewer = new ::osgViewer::Viewer();
 
   /* init main camera */
   ::osg::CameraRefPtr camera = viewer->getCamera();
@@ -448,7 +448,7 @@ void WindowManager::init(osg::GraphicsContext* gc) {
   init(viewer, gc);
 }
 
-void WindowManager::init(osgViewer::Viewer* v, osg::GraphicsContext* gc) {
+void WindowManager::init(vsg::Viewer* v, osg::GraphicsContext* gc) {
   setID(gc->getTraits()->windowName);
 
   viewer_ptr_ = v;
@@ -487,7 +487,7 @@ WindowManager::WindowManager(osg::GraphicsContext* gc)
   init(gc);
 }
 
-WindowManager::WindowManager(osgViewer::Viewer* v, osg::GraphicsContext* gc)
+WindowManager::WindowManager(vsg::Viewer* v, osg::GraphicsContext* gc)
     : GroupNode(""), nodeTrackerManipulatorIndex(2) {
   init(v, gc);
 }
@@ -542,7 +542,7 @@ WindowManagerPtr_t WindowManager::create(osg::GraphicsContext* gc) {
   return shared_ptr;
 }
 
-WindowManagerPtr_t WindowManager::create(osgViewer::Viewer* v,
+WindowManagerPtr_t WindowManager::create(vsg::Viewer* v,
                                          osg::GraphicsContext* gc) {
   WindowManagerPtr_t shared_ptr(new WindowManager(v, gc));
 
@@ -636,8 +636,8 @@ WindowManager::~WindowManager() {
   viewer_ptr_ = NULL;
 }
 
-osgViewer::ViewerRefPtr WindowManager::getViewerClone() {
-  return ::osgViewer::ViewerRefPtr(viewer_ptr_.get());
+vsg::ViewerRefPtr WindowManager::getViewerClone() {
+  return ::vsg::ViewerRefPtr(viewer_ptr_.get());
 }
 
 void WindowManager::startCapture(const std::string& filename,

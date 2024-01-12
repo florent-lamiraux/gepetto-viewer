@@ -30,7 +30,7 @@ class WindowManager : public GroupNode {
   GroupNodePtr_t scene_ptr_;
 
   /** OSG viewer */
-  ::osgViewer::ViewerRefPtr viewer_ptr_;
+  ::vsg::ViewerRefPtr viewer_ptr_;
 
   /** OSG cameras */
   ::osg::CameraRefPtr main_camera_;
@@ -66,14 +66,14 @@ class WindowManager : public GroupNode {
 
   void init(osg::GraphicsContext* gc);
 
-  void init(osgViewer::Viewer* v, osg::GraphicsContext* gc);
+  void init(vsg::Viewer* v, osg::GraphicsContext* gc);
 
   void init(const unsigned int& x, const unsigned int& y,
             const unsigned int& width, const unsigned int& height);
 
   WindowManager();
 
-  WindowManager(osgViewer::Viewer* v, osg::GraphicsContext* gc);
+  WindowManager(vsg::Viewer* v, osg::GraphicsContext* gc);
 
   WindowManager(osg::GraphicsContext* gc);
 
@@ -97,7 +97,7 @@ class WindowManager : public GroupNode {
    */
   static WindowManagerPtr_t create(osg::GraphicsContext* gc);
 
-  static WindowManagerPtr_t create(osgViewer::Viewer* v,
+  static WindowManagerPtr_t create(vsg::Viewer* v,
                                    osg::GraphicsContext* gc);
 
   /** Create and initialize a graphical engine of type OSG with some parameters
@@ -163,7 +163,7 @@ class WindowManager : public GroupNode {
                const std::string& text, float size = 20);
 
   /** Return a ref to the viewer */
-  ::osgViewer::ViewerRefPtr getViewerClone();
+  ::vsg::ViewerRefPtr getViewerClone();
 
   virtual ~WindowManager();
 

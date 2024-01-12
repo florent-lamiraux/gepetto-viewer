@@ -23,7 +23,7 @@
 namespace gepetto {
 namespace gui {
 /// This class is a modified version of class QtKeyboardMap of
-/// OpenSceneGraph version 3.4.0 (file src/vsgQt/GraphicsWindowQt.cpp)
+/// OpenSceneGraph version 3.4.0 (file src/vsgQt/Window.cpp)
 class QtOsgKeyboard {
  public:
   QtOsgKeyboard() {

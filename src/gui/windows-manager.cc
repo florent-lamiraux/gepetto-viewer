@@ -59,7 +59,7 @@ WindowsManager::WindowID WindowsManager::createWindow(
 
 WindowsManager::WindowID WindowsManager::createWindow(
     const std::string& windowName, gepetto::gui::OSGWidget* widget,
-    osgViewer::Viewer* viewer, osg::GraphicsContext* gc) {
+    vsg::Viewer* viewer, osg::GraphicsContext* gc) {
   if (getWindowManager(windowName, false)) return windowName;
   viewer::WindowManagerPtr_t newWindow =
       viewer::WindowManager::create(viewer, gc);

@@ -37,7 +37,7 @@ class WindowsManager : public QObject, public viewer::WindowsManager {
 
   WindowID createWindow(const std::string& windowName);
   WindowID createWindow(const std::string& windowName, OSGWidget* widget,
-                        osgViewer::Viewer* viewer, osg::GraphicsContext* gc);
+                        vsg::Viewer* viewer, osg::GraphicsContext* gc);
 
   void insertNode(const std::string& nodeName, NodePtr_t node);
   bool addToGroup(const std::string& nodeName, const std::string& groupName);

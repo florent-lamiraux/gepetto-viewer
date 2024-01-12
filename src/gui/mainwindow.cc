@@ -181,7 +181,7 @@ OSGWidget* MainWindow::createView(const std::string& name) {
   OSGWidget* osgWidget = new OSGWidget(osgViewerManagers_, name, this, 0
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
                                        ,
-                                       osgViewer::Viewer::SingleThreaded
+                                       vsg::Viewer::SingleThreaded
 #endif
   );
   osgWidget->setObjectName(name.c_str());

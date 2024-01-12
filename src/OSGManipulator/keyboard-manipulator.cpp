@@ -68,7 +68,7 @@ KeyboardManipulator::KeyboardManipulator(osgViewer::GraphicsWindow* window,
   localUp_ = getUpVector(getCoordinateFrame(_eye));
   noRoll_ = true;
   setAllowThrow(false);  // stop all mouse motions when mouse is released
-                         /* osgViewer::Viewer::Windows windows;
+                         /* vsg::Viewer::Windows windows;
                           window->getWindows(windows);
                           gWindow_=windows.front();*/
 

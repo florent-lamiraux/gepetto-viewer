@@ -68,7 +68,7 @@ OSGWidget::OSGWidget(WindowsManagerPtr_t wm, const std::string& name,
       pickHandler_(new PickHandler(this, wsm_)),
       wid_(),
       wm_(),
-      viewer_(new osgViewer::Viewer),
+      viewer_(new vsg::Viewer),
       screenCapture_(),
       tmpDirectory_(NULL),
       toolBar_(new QToolBar(QString::fromStdString(name) + " tool bar")),
@@ -420,7 +420,7 @@ void OSGWidget::initGraphicsWindowsAndViewer(MainWindow* parent,
   traits_ptr->vsync = true;
   //  traits_ptr->sharedContext = 0;
 
-  graphicsWindow_ = new vsgQt::GraphicsWindowQt(traits_ptr);
+  graphicsWindow_ = new vsgQt::Window(traits_ptr);
 
   osg::Camera* camera = viewer_->getCamera();
   camera->setGraphicsContext(graphicsWindow_);
