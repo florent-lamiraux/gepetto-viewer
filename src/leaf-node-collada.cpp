@@ -36,12 +36,12 @@ std::string getCachedFileName(const std::string& meshfile) {
   return std::string();
 }
 
-class LightSourceRemoving : public osg::NodeVisitor {
+class LightSourceRemoving : public vsg::NodeVisitor {
  public:
   LightSourceRemoving() : NodeVisitor(TRAVERSE_ALL_CHILDREN) {}
 
   void apply(osg::LightSource& node) {
-    osg::Group* group = new osg::Group(node);
+    vsg::Group* group = new osg::Group(node);
     for (unsigned int i = 0; i < node.getNumParents(); ++i)
       node.getParent(i)->replaceChild(&node, group);
   }
@@ -49,9 +49,9 @@ class LightSourceRemoving : public osg::NodeVisitor {
 
 #if OSG_VERSION_LESS_THAN(3, 3, 3)
 struct ObjectCache {
-  typedef std::map<std::string, osg::NodeRefPtr> Map_t;
+  typedef std::map<std::string, vsg::NodeRefPtr> Map_t;
   Map_t map_;
-  bool get(const std::string& name, osg::NodeRefPtr& node) const {
+  bool get(const std::string& name, vsg::NodeRefPtr& node) const {
     Map_t::const_iterator it = map_.find(name);
     if (it != map_.end()) {
       node = it->second;
@@ -59,7 +59,7 @@ struct ObjectCache {
     }
     return false;
   }
-  void add(const std::string& name, osg::NodeRefPtr& node) {
+  void add(const std::string& name, vsg::NodeRefPtr& node) {
     map_.insert(std::make_pair(name, node));
   }
   void erase(const std::string& name) { map_.erase(name); }
@@ -73,7 +73,7 @@ vsg::ref_ptr<osgDB::ObjectCache> object_cache(new osgDB::ObjectCache);
 /* Declaration of private function members */
 
 void LeafNodeCollada::init() {
-  group_ptr_ = new osg::Group;
+  group_ptr_ = new vsg::Group;
   group_ptr_->setName("groupForMaterial");
 
 #if OSG_VERSION_LESS_THAN(3, 3, 3)
@@ -152,7 +152,7 @@ void LeafNodeCollada::init() {
         }
         // Apply scale
         if (scale != 1.) {
-          vsg::ref_ptr<osg::MatrixTransform> xform = new osg::MatrixTransform;
+          vsg::ref_ptr<vsg::MatrixTransform> xform = new osg::MatrixTransform;
           xform->setDataVariance(osg::Object::STATIC);
           xform->setMatrix(osg::Matrix::scale(scale, scale, scale));
           xform->addChild(collada_ptr_);
@@ -225,7 +225,7 @@ LeafNodeCollada::LeafNodeCollada(const std::string& name,
 }
 
 LeafNodeCollada::LeafNodeCollada(const std::string& name,
-                                 const ::osg::NodeRefPtr& node,
+                                 const ::vsg::NodeRefPtr& node,
                                  const std::string& collada_file_path)
     : Node(name), collada_file_path_(collada_file_path), collada_ptr_(node) {
   init();
@@ -260,7 +260,7 @@ LeafNodeColladaPtr_t LeafNodeCollada::create(
 }
 
 LeafNodeColladaPtr_t LeafNodeCollada::create(
-    const std::string& name, ::osg::NodeRefPtr mesh,
+    const std::string& name, ::vsg::NodeRefPtr mesh,
     const std::string& collada_file_path) {
   LeafNodeColladaPtr_t shared_ptr(
       new LeafNodeCollada(name, mesh, collada_file_path));
@@ -297,7 +297,7 @@ LeafNodeColladaPtr_t LeafNodeCollada::createCopy(LeafNodeColladaPtr_t other) {
   return shared_ptr;
 }
 
-::osg::NodeRefPtr LeafNodeCollada::getColladaPtr() { return collada_ptr_; }
+::vsg::NodeRefPtr LeafNodeCollada::getColladaPtr() { return collada_ptr_; }
 
 /* End of declaration of protected function members */
 
@@ -319,7 +319,7 @@ void LeafNodeCollada::setColor(const osgVector4& color) {
   mat_ptr->setDiffuse(osg::Material::FRONT_AND_BACK, color);
   mat_ptr->setAmbient(osg::Material::FRONT_AND_BACK, ambient);
 
-  osg::StateSet* ss = group_ptr_->getOrCreateStateSet();
+  vsg::StateGroup* ss = group_ptr_->getOrCreateStateSet();
   ss->setAttribute(mat_ptr.get());
   setTransparentRenderingBin(color[3] < Node::TransparencyRenderingBinThreshold,
                              ss);
@@ -327,7 +327,7 @@ void LeafNodeCollada::setColor(const osgVector4& color) {
 }
 
 osgVector4 LeafNodeCollada::getColor() const {
-  osg::StateSet* ss = group_ptr_->getStateSet();
+  vsg::StateGroup* ss = group_ptr_->getStateSet();
   if (ss) {
     osg::Material* mat = dynamic_cast<osg::Material*>(
         ss->getAttribute(osg::StateAttribute::MATERIAL));
@@ -338,7 +338,7 @@ osgVector4 LeafNodeCollada::getColor() const {
 
 void LeafNodeCollada::setAlpha(const float& alpha) {
   // TODO this overload is probably not necessary.
-  osg::StateSet* ss = group_ptr_->getOrCreateStateSet();
+  vsg::StateGroup* ss = group_ptr_->getOrCreateStateSet();
 
   alpha_ = alpha;
   osg::Material* mat;
@@ -378,7 +378,7 @@ const std::string& LeafNodeCollada::textureFilePath() const {
   return texture_file_path_;
 }
 
-/*void LeafNodeCollada::setColor(osg::NodeRefPtr osgNode_ptr,const osgVector4&
+/*void LeafNodeCollada::setColor(vsg::NodeRefPtr osgNode_ptr,const osgVector4&
 color)
 {
   osg::Vec4ArrayRefPtr colorArray = new osg::Vec4Array();
@@ -394,7 +394,7 @@ color)
     }
   }
   else {
-    osg::GroupRefPtr group_ptr = osgNode_ptr->asGroup();
+    vsg::GroupRefPtr group_ptr = osgNode_ptr->asGroup();
     if (group_ptr) {
       for (unsigned int i = 0 ; i < group_ptr->getNumChildren() ; i++) {
         setColor(group_ptr->getChild(i),color);
@@ -403,7 +403,7 @@ color)
   }
 }*/
 
-vsg::ref_ptr<osg::Node> LeafNodeCollada::getOsgNode() const {
+vsg::ref_ptr<vsg::Node> LeafNodeCollada::getOsgNode() const {
   return collada_ptr_;
 }
 
@@ -419,7 +419,7 @@ void LeafNodeCollada::applyScale() {
   // Do not remove this brackets. See
   // https://github.com/openscenegraph/OpenSceneGraph/issues/1020
   {
-    vsg::ref_ptr<osg::MatrixTransform> xform = new osg::MatrixTransform;
+    vsg::ref_ptr<vsg::MatrixTransform> xform = new osg::MatrixTransform;
     xform->setMatrix(osg::Matrix::scale(scale));
     xform->setDataVariance(osg::Object::STATIC);
 

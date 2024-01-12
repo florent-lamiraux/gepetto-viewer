@@ -21,12 +21,12 @@
 namespace gepetto {
 namespace viewer {
 namespace {
-const osg::StateSetRefPtr& getVisibleStateSet(const LightingMode& mode) {
-  static osg::StateSetRefPtr ssOn, ssOff;
+const vsg::StateGroupRefPtr& getVisibleStateSet(const LightingMode& mode) {
+  static vsg::StateGroupRefPtr ssOn, ssOff;
   switch (mode) {
     case LIGHT_INFLUENCE_ON:
       if (false && !ssOn) {  // Disable because this is the default.
-        ssOn = osg::StateSetRefPtr(new osg::StateSet());
+        ssOn = vsg::StateGroupRefPtr(new osg::StateSet());
         ssOn->setRenderBinToInherit();
         ssOn->setMode(GL_DEPTH_TEST, ::osg::StateAttribute::ON |
                                          ::osg::StateAttribute::PROTECTED);
@@ -38,7 +38,7 @@ const osg::StateSetRefPtr& getVisibleStateSet(const LightingMode& mode) {
       return ssOn;
     case LIGHT_INFLUENCE_OFF:
       if (!ssOff) {
-        ssOff = osg::StateSetRefPtr(new osg::StateSet());
+        ssOff = vsg::StateGroupRefPtr(new osg::StateSet());
         ssOff->setRenderBinToInherit();
         ssOff->setMode(GL_DEPTH_TEST, ::osg::StateAttribute::ON |
                                           ::osg::StateAttribute::PROTECTED);
@@ -54,12 +54,12 @@ const osg::StateSetRefPtr& getVisibleStateSet(const LightingMode& mode) {
   };
 }
 
-const osg::StateSetRefPtr& getAlwaysOnTopStateSet(const LightingMode& mode) {
-  static osg::StateSetRefPtr ssOn, ssOff;
+const vsg::StateGroupRefPtr& getAlwaysOnTopStateSet(const LightingMode& mode) {
+  static vsg::StateGroupRefPtr ssOn, ssOff;
   switch (mode) {
     case LIGHT_INFLUENCE_ON:
       if (!ssOn) {  // Disable because this is the default.
-        ssOn = osg::StateSetRefPtr(new osg::StateSet());
+        ssOn = vsg::StateGroupRefPtr(new osg::StateSet());
         ssOn->setRenderBinDetails(INT_MAX, "DepthSortedBin");
         ssOn->setMode(GL_DEPTH_TEST, ::osg::StateAttribute::OFF |
                                          ::osg::StateAttribute::PROTECTED);
@@ -71,7 +71,7 @@ const osg::StateSetRefPtr& getAlwaysOnTopStateSet(const LightingMode& mode) {
       return ssOn;
     case LIGHT_INFLUENCE_OFF:
       if (!ssOff) {
-        ssOff = osg::StateSetRefPtr(new osg::StateSet());
+        ssOff = vsg::StateGroupRefPtr(new osg::StateSet());
         ssOff->setRenderBinDetails(INT_MAX, "DepthSortedBin");
         ssOff->setMode(GL_DEPTH_TEST, ::osg::StateAttribute::OFF |
                                           ::osg::StateAttribute::PROTECTED);
@@ -87,10 +87,10 @@ const osg::StateSetRefPtr& getAlwaysOnTopStateSet(const LightingMode& mode) {
   };
 }
 
-const osg::StateSetRefPtr& getWireframeStateSet() {
-  static osg::StateSetRefPtr ss;
+const vsg::StateGroupRefPtr& getWireframeStateSet() {
+  static vsg::StateGroupRefPtr ss;
   if (!ss) {
-    ss = osg::StateSetRefPtr(new osg::StateSet());
+    ss = vsg::StateGroupRefPtr(new osg::StateSet());
 
     /* Allowing wireframe mode */
     osg::PolygonModeRefPtr polygon_mode_ptr = new ::osg::PolygonMode;
@@ -121,11 +121,11 @@ const osg::StateSetRefPtr& getWireframeStateSet() {
 }
 
 template <unsigned int state>
-const osg::StateSetRefPtr& getHighlightStateSet() {
-  static osg::StateSetRefPtr ss;
+const vsg::StateGroupRefPtr& getHighlightStateSet() {
+  static vsg::StateGroupRefPtr ss;
   if (state == 0) return ss;
   if (!ss) {
-    ss = osg::StateSetRefPtr(new osg::StateSet());
+    ss = vsg::StateGroupRefPtr(new osg::StateSet());
     ::osg::MaterialRefPtr material_switch_ptr = new osg::Material;
     int glModeValue = ::osg::StateAttribute::INHERIT;
     /// Some color codes are taken from
@@ -245,7 +245,7 @@ void setNodeHighlightState(Node* node, const int& v) {
   node->setHighlightState(v);
 }
 
-void setFlag(::osg::Node* node, osg::Node::NodeMask bit, bool on) {
+void setFlag(::vsg::Node* node, osg::Node::NodeMask bit, bool on) {
   if (on)
     node->setNodeMask(node->getNodeMask() | bit);
   else
@@ -298,17 +298,17 @@ void Node::init() {
 
   M_.callback(scale_.callback());
 
-  switch_node_ptr_ = new ::osg::Group;
-  hl_switch_node_ptr_ = new ::osg::Group;
-  transform_ptr_ = new ::osg::MatrixTransform;
+  switch_node_ptr_ = new ::vsg::Group;
+  hl_switch_node_ptr_ = new ::vsg::Group;
+  transform_ptr_ = new ::vsg::MatrixTransform;
   transform_ptr_->setName("positionInParentNode");
 
   switch_node_ptr_->setNodeMask(VisibilityBit | NodeBit | IntersectionBit);
   switch_node_ptr_->setName(id_name_);
   wireframe_modes_.resize(2);
-  wireframe_modes_[FILL] = new ::osg::Group;
+  wireframe_modes_[FILL] = new ::vsg::Group;
   wireframe_modes_[FILL]->setName("wireframe: FILL");
-  wireframe_modes_[WIREFRAME] = new ::osg::Group;
+  wireframe_modes_[WIREFRAME] = new ::vsg::Group;
   wireframe_modes_[WIREFRAME]->setName("wireframe: WIREFRAME");
 
   /* Building hierarchie */
@@ -390,7 +390,7 @@ void Node::setSelectable(bool selectable) {
 }
 
 void Node::updateTransform() {
-  osg::Matrixf M;
+  vsg::MatrixTransform M;
   M.setRotate(M_.value.quat);
   M.setTrans(M_.value.position);
 
@@ -523,54 +523,15 @@ void Node::setWireFrameMode(const WireFrameMode& mode) {
 }
 
 void Node::addLandmark(const float& size) {
-  ::osg::GeometryRefPtr geom_ptr = new ::osg::Geometry();
-
-  /* Define points of the beam */
-  ::osg::Vec3ArrayRefPtr points_ptr = new ::osg::Vec3Array(6);
-  points_ptr->at(0) = osgVector3(0., 0., 0.);
-  points_ptr->at(1) = osgVector3(size, 0., 0.);
-  points_ptr->at(2) = osgVector3(0., 0., 0.);
-  points_ptr->at(3) = osgVector3(0., size, 0.);
-  points_ptr->at(4) = osgVector3(0., 0., 0.);
-  points_ptr->at(5) = osgVector3(0., 0., size);
-
-  /* Define the color */
-  ::osg::Vec4ArrayRefPtr color_ptr = new ::osg::Vec4Array(3);
-  color_ptr->at(0) = osgVector4(1., 0., 0., 1.);
-  color_ptr->at(1) = osgVector4(0., 1., 0., 1.);
-  color_ptr->at(2) = osgVector4(0., 0., 1., 1.);
-
-  geom_ptr->setVertexArray(points_ptr.get());
-  geom_ptr->setColorArray(color_ptr.get());
-  geom_ptr->setColorBinding(::osg::Geometry::BIND_PER_PRIMITIVE_SET);
-  geom_ptr->addPrimitiveSet(new osg::DrawArrays(GL_LINES, 0, 2));
-  geom_ptr->addPrimitiveSet(new osg::DrawArrays(GL_LINES, 2, 2));
-  geom_ptr->addPrimitiveSet(new osg::DrawArrays(GL_LINES, 4, 2));
-
-  transform_ptr_->removeChild(landmark_geode_ptr_);
-  landmark_geode_ptr_ = new osg::Geode();
-  landmark_geode_ptr_->addDrawable(geom_ptr);
-
-  // set Landmark as ALWAYS ON TOP
-  setFlag(landmark_geode_ptr_.get(), VisibilityBit, true);
-  landmark_geode_ptr_->setStateSet(getAlwaysOnTopStateSet(LIGHT_INFLUENCE_OFF));
-
-  transform_ptr_->addChild(landmark_geode_ptr_);
-  dirty_ = true;
 }
 
-bool Node::hasLandmark() const { return landmark_geode_ptr_; }
+bool Node::hasLandmark() const { return false; }
 
 void Node::deleteLandmark() {
-  if (landmark_geode_ptr_) {
-    transform_ptr_->removeChild(landmark_geode_ptr_);
-    landmark_geode_ptr_.release();
-    dirty_ = true;
-  }
 }
 
-::osg::Group* Node::setupHighlightState(unsigned int state) {
-  osg::StateSetRefPtr ss;
+::vsg::Group* Node::setupHighlightState(unsigned int state) {
+  vsg::StateGroupRefPtr ss;
   switch (state) {
     case 1:  /// collision
       ss = getHighlightStateSet<1>();
@@ -612,7 +573,7 @@ void Node::deleteLandmark() {
     default:
       break;
   }
-  osg::Group* node = new ::osg::Group;
+  vsg::Group* node = new ::osg::Group;
   node->setStateSet(ss);
   node->setDataVariance(osg::Object::STATIC);
   return node;
@@ -635,7 +596,7 @@ void Node::setAlpha(const float& alpha) {
           << std::endl;
     return;
   }
-  osg::StateSet* ss = geode_ptr_.get()->getStateSet();
+  vsg::StateGroup* ss = geode_ptr_.get()->getStateSet();
   if (ss) {
     alpha_ = alpha;
     osg::Material* mat;
@@ -660,7 +621,7 @@ void Node::setTransparency(const float& transparency) {
 
 float Node::getTransparency() const { return 1.f - getAlpha(); }
 
-void Node::setTransparentRenderingBin(bool transparent, osg::StateSet* ss) {
+void Node::setTransparentRenderingBin(bool transparent, vsg::StateGroup* ss) {
   if (ss == NULL) {
     if (geode_ptr_.get() == NULL) {
       log() << "You must initialize a Geode on " << id_name_ << " to use Alpha"
@@ -671,12 +632,12 @@ void Node::setTransparentRenderingBin(bool transparent, osg::StateSet* ss) {
     if (ss == NULL) return;
   }
   bool isTransparent =
-      (ss->getRenderingHint() == osg::StateSet::TRANSPARENT_BIN);
+      (ss->getRenderingHint() == vsg::StateGroup::TRANSPARENT_BIN);
   if (transparent == isTransparent) return;
   if (transparent)
-    ss->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+    ss->setRenderingHint(vsg::StateGroup::TRANSPARENT_BIN);
   else
-    ss->setRenderingHint(osg::StateSet::DEFAULT_BIN);
+    ss->setRenderingHint(vsg::StateGroup::DEFAULT_BIN);
   dirty_ = true;
 }
 
@@ -685,7 +646,7 @@ Node::~Node() {
   /* deleting the top most node (switch_node_ptr_) will delete everything else.
    * Loop over the parents of switch_node_ptr_ and remove references to it.
    */
-  typedef ::osg::Node::ParentList PL_t;
+  typedef ::vsg::Node::ParentList PL_t;
   PL_t parents = switch_node_ptr_->getParents();
   for (PL_t::const_iterator _p = parents.begin(); _p != parents.end(); ++_p)
     (*_p)->removeChild(switch_node_ptr_);
@@ -695,7 +656,7 @@ const Configuration& Node::getGlobalTransform() const { return M_.value; }
 
 void Node::traverse(NodeVisitor& /*visitor*/) {}
 
-vsg::ref_ptr<osg::Node> Node::getOsgNode() const { return geode_ptr_.get(); }
+vsg::ref_ptr<vsg::Node> Node::getOsgNode() const { return geode_ptr_.get(); }
 
 /* End of declaration of public function members */
 

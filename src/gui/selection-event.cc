@@ -35,7 +35,7 @@ void toQVector3(const osg::Vec3d& in, QVector3D& out) {
 }  // namespace
 
 void SelectionEvent::setupIntersection(
-    const osgUtil::LineSegmentIntersector::Intersection& it) {
+    const vsg::LineSegmentIntersector::Intersection& it) {
   hasIntersection_ = true;
   primitiveIndex_ = it.primitiveIndex;
   toQVector3(it.getLocalIntersectPoint(), localPoint_);

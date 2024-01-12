@@ -95,7 +95,6 @@ class OSGWidget : public QWidget {
   QTimer timer_;
   int nSuccessiveStaticFrames_;
   vsg::ViewerRefPtr viewer_;
-  vsg::ref_ptr<osgViewer::ScreenCaptureHandler> screenCapture_;
   QTemporaryDir* tmpDirectory_;
 
   QToolBar* toolBar_;

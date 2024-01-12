@@ -11,7 +11,7 @@
 namespace gepetto {
 namespace gui {
 
-class PointIntersector : public osgUtil::LineSegmentIntersector {
+class PointIntersector : public vsg::LineSegmentIntersector {
  public:
   PointIntersector();
   PointIntersector(const osg::Vec3& start, const osg::Vec3& end);

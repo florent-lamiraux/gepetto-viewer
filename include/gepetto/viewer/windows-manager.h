@@ -17,18 +17,17 @@
 #ifndef GEPETTO_VIEWER_WINDOWMANAGERS_HH
 #define GEPETTO_VIEWER_WINDOWMANAGERS_HH
 
+#include <mutex>
+
 #include <gepetto/viewer/config-osg.h>
 #include <gepetto/viewer/fwd.h>
 #include <gepetto/viewer/transform-writer.h>
 
-#include <OpenThreads/Mutex>
-#include <OpenThreads/ScopedLock>
-
 namespace gepetto {
 namespace viewer {
 
-typedef OpenThreads::Mutex Mutex;
-typedef OpenThreads::ScopedLock<Mutex> ScopedLock;
+typedef std::mutex Mutex;
+typedef std::scoped_lock<Mutex> ScopedLock;
 
 DEF_CLASS_SMART_PTR(WindowsManager)
 
@@ -48,10 +47,9 @@ struct BlenderFrameCapture {
 class WindowsManager {
  public:
   // Typedef for position and color values.
-  typedef osg::Vec3f::value_type value_type;
-  typedef osgVector4 Color_t;
-  typedef ::osg::Vec3ArrayRefPtr Vec3ArrayPtr_t;
-  typedef ::osg::Vec4ArrayRefPtr Vec4ArrayPtr_t;
+  typedef vsg::t_vec4<value_type> Color_t;
+  typedef ::vsg::vec3ArrayRefPtr Vec3ArrayPtr_t;
+  typedef ::vsg::vec4ArrayRefPtr Vec4ArrayPtr_t;
   typedef std::string WindowID;
 
  private:

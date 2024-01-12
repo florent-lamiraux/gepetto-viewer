@@ -20,7 +20,7 @@
 #include <gepetto/gui/fwd.hh>
 // This include must be include before any other Qt include for GLDEBUGPROC
 #include <gepetto/viewer/node.h>
-
+#include <vsg/utils/LineSegmentIntersector.h>
 #include <QAtomicInt>
 #include <QObject>
 #include <QString>
@@ -48,7 +48,7 @@ class SelectionEvent : public QObject {
       : type_(t), modKey_(modKey), hasIntersection_(false), c_(-1) {}
 
   void setupIntersection(
-      const osgUtil::LineSegmentIntersector::Intersection& it);
+      const vsg::LineSegmentIntersector::Intersection& it);
 
   const NodePtr_t& node() const { return node_; }
 

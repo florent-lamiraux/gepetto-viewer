@@ -16,59 +16,9 @@ namespace viewer {
 /* Declaration of private function members */
 
 void LeafNodeArrow::init() {
-  /* Create Geode for adding ShapeDrawable */
-  geode_ptr_ = new osg::Geode();
-
-  resetGeodeContent();
-
-  /* Create PositionAttitudeTransform */
-  this->asQueue()->addChild(geode_ptr_);
-
-  /* Allow transparency */
-  geode_ptr_->getOrCreateStateSet()->setMode(GL_BLEND,
-                                             ::osg::StateAttribute::ON);
-  ;
-
-  addProperty(FloatProperty::create(
-      "Radius",
-      FloatProperty::getterFromMemberFunction(this, &LeafNodeArrow::getRadius),
-      FloatProperty::setterFromMemberFunction(this,
-                                              &LeafNodeArrow::setRadius)));
-  addProperty(FloatProperty::create(
-      "Size",
-      FloatProperty::getterFromMemberFunction(this, &LeafNodeArrow::getSize),
-      FloatProperty::setterFromMemberFunction(this, &LeafNodeArrow::setSize)));
 }
 
 void LeafNodeArrow::resetGeodeContent() {
-  if (cylinder_drawable_) geode_ptr_->removeDrawable(cylinder_drawable_);
-  if (cone_drawable_) geode_ptr_->removeDrawable(cone_drawable_);
-
-  /* create the axis : */
-  float R = getRadius();
-  float L = getSize();
-  float Lcone = std::min(L, 4.f * R);
-
-  /* Create cylinder */
-  ::osg::CylinderRefPtr cylinder_shape_x_ptr = new ::osg::Cylinder();
-  cylinder_shape_x_ptr->set(osgVector3((L - Lcone) / 2.f, 0.f, 0.f), R,
-                            L - Lcone);
-  cylinder_shape_x_ptr->setRotation(
-      osgQuat(0.f, ::osg::X_AXIS, M_PI_2, ::osg::Y_AXIS, 0.f, ::osg::Z_AXIS));
-  /* Create cone */
-  ::osg::ConeRefPtr cone_shape_x_ptr = new ::osg::Cone();
-  cone_shape_x_ptr->set(osgVector3(L - 3 * Lcone / 4, 0.f, 0.f), 2.f * R,
-                        Lcone);
-  cone_shape_x_ptr->setRotation(
-      osgQuat(0.f, ::osg::X_AXIS, M_PI_2, ::osg::Y_AXIS, 0.f, ::osg::Z_AXIS));
-
-  /* create drawable and add them to geode */
-  cylinder_drawable_ = new ::osg::ShapeDrawable(cylinder_shape_x_ptr);
-  cone_drawable_ = new ::osg::ShapeDrawable(cone_shape_x_ptr);
-  setColor(color_);
-
-  geode_ptr_->addDrawable(cylinder_drawable_);
-  geode_ptr_->addDrawable(cone_drawable_);
 }
 
 LeafNodeArrow::LeafNodeArrow(const std::string& name, const osgVector4& color,
@@ -184,13 +134,6 @@ void LeafNodeArrow::resize(float radius, float length) {
 
 LeafNodeArrow::~LeafNodeArrow() {
   /* Proper deletion of all tree scene */
-
-  geode_ptr_->removeDrawable(cylinder_drawable_);
-  geode_ptr_->removeDrawable(cone_drawable_);
-
-  geode_ptr_ = NULL;
-  cylinder_drawable_ = NULL;
-  cone_drawable_ = NULL;
 
   weak_ptr_.reset();
 }

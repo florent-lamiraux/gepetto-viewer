@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  vsg::ref_ptr<osg::Node> input = osgDB::readNodeFile(inputFilename);
+  vsg::ref_ptr<vsg::Node> input = osgDB::readNodeFile(inputFilename);
   vsg::ref_ptr<osg::LOD> lod = new osg::LOD;
   osgUtil::Simplifier simplifier;
 
@@ -80,13 +80,13 @@ int main(int argc, char** argv) {
               << maxDists[i] << std::endl;
 
     ratio = ratios[i];
-    vsg::ref_ptr<osg::Node> simplified;
+    vsg::ref_ptr<vsg::Node> simplified;
     if (ratio == 1) {
       simplified = input;
     } else {
       simplifier.setSampleRatio(ratio);
       simplified =
-          dynamic_cast<osg::Node*>(input->clone(osg::CopyOp::DEEP_COPY_ALL));
+          dynamic_cast<vsg::Node*>(input->clone(osg::CopyOp::DEEP_COPY_ALL));
       simplified->accept(simplifier);
     }
     lod->addChild(simplified, minDists[i], maxDists[i]);

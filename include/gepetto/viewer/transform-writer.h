@@ -23,7 +23,7 @@ DEF_CLASS_SMART_PTR(BasicTransformWriter)
 DEF_CLASS_SMART_PTR(YamlTransformWriter)
 DEF_CLASS_SMART_PTR(TransformWriterVisitor)
 
-class TransformWriter : public osg::Referenced {
+class TransformWriter : public vsg::Object {
  public:
   // TODO: set the buffer of the filebuf manually so as to increase buffer
   // size.

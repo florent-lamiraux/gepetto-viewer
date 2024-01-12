@@ -28,8 +28,8 @@ class LeafNodeCollada : public Node {
   LeafNodeColladaWeakPtr weak_ptr_;
 
   /** Associated Node Shape */
-  ::osg::GroupRefPtr group_ptr_;
-  ::osg::NodeRefPtr collada_ptr_;
+  ::vsg::GroupRefPtr group_ptr_;
+  ::vsg::NodeRefPtr collada_ptr_;
 
   BackfaceDrawingProperty backfaceDrawing_;
 
@@ -43,7 +43,7 @@ class LeafNodeCollada : public Node {
                   const std::string& collada_file_path);
   LeafNodeCollada(const std::string& name, const std::string& collada_file_path,
                   const osgVector4& color);
-  LeafNodeCollada(const std::string& name, const ::osg::NodeRefPtr& node,
+  LeafNodeCollada(const std::string& name, const ::vsg::NodeRefPtr& node,
                   const std::string& collada_file_path);
   /* Copy constructor */
   LeafNodeCollada(const LeafNodeCollada& other);
@@ -56,7 +56,7 @@ class LeafNodeCollada : public Node {
   /** Static method which create a new LeafNodeCollada
    */
   static LeafNodeColladaPtr_t create(const std::string& name,
-                                     ::osg::NodeRefPtr mesh,
+                                     ::vsg::NodeRefPtr mesh,
                                      const std::string& collada_file_path);
   static LeafNodeColladaPtr_t create(const std::string& name,
                                      const std::string& collada_file_path);
@@ -73,7 +73,7 @@ class LeafNodeCollada : public Node {
   virtual LeafNodeColladaPtr_t clone(void) const;
 
   /** Returns a pointer to the NodeRefPtr  */
-  ::osg::NodeRefPtr getColladaPtr(void);
+  ::vsg::NodeRefPtr getColladaPtr(void);
 
   /** Copy
    \brief Proceed to a copy of the currend object as clone
@@ -95,7 +95,7 @@ class LeafNodeCollada : public Node {
   const std::string& textureFilePath() const;
 
   virtual void setAlpha(const float& alpha);
-  virtual vsg::ref_ptr<osg::Node> getOsgNode() const;
+  virtual vsg::ref_ptr<vsg::Node> getOsgNode() const;
 
   /// Remove any osg::LightSource of this mesh.
   void removeLightSources();

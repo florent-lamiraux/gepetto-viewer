@@ -45,7 +45,7 @@ class PickHandler : public osgGA::GUIEventHandler {
   void getUsage(osg::ApplicationUsage& usage) const;
 
  private:
-  typedef vsg::ref_ptr<osgUtil::LineSegmentIntersector> LineSegmentIntersector;
+  typedef vsg::ref_ptr<vsg::LineSegmentIntersector> LineSegmentIntersector;
 
   void computeLineIntersection(osgGA::GUIActionAdapter& aa, const float& x,
                                const float& y);

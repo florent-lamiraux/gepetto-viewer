@@ -15,7 +15,7 @@ namespace gepetto {
 namespace viewer {
 class BackfaceDrawingProperty : public Property {
  public:
-  typedef osg::StateSetRefPtr StateSetRefPtr;
+  typedef vsg::StateGroupRefPtr StateSetRefPtr;
 
   bool hasReadAccess() const { return static_cast<bool>(stateSet_); }
   bool hasWriteAccess() const { return static_cast<bool>(stateSet_); }
@@ -34,7 +34,7 @@ class BackfaceDrawingProperty : public Property {
   bool impl_get(bool& value);
 
  private:
-  osg::StateSetRefPtr stateSet_;
+  vsg::StateGroupRefPtr stateSet_;
 };
 } /* namespace viewer */
 } /* namespace gepetto */

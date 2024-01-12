@@ -13,13 +13,13 @@ namespace gepetto {
 namespace gui {
 
 PointIntersector::PointIntersector()
-    : osgUtil::LineSegmentIntersector(MODEL, 0.0, 0.0), _pickBias(2.0f) {}
+    : vsg::LineSegmentIntersector(MODEL, 0.0, 0.0), _pickBias(2.0f) {}
 
 PointIntersector::PointIntersector(const osg::Vec3& start, const osg::Vec3& end)
-    : osgUtil::LineSegmentIntersector(start, end), _pickBias(2.0f) {}
+    : vsg::LineSegmentIntersector(start, end), _pickBias(2.0f) {}
 
 PointIntersector::PointIntersector(CoordinateFrame cf, double x, double y)
-    : osgUtil::LineSegmentIntersector(cf, x, y), _pickBias(2.0f) {}
+    : vsg::LineSegmentIntersector(cf, x, y), _pickBias(2.0f) {}
 
 osgUtil::Intersector* PointIntersector::clone(
     osgUtil::IntersectionVisitor& iv) {

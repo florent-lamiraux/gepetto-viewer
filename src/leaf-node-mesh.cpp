@@ -31,7 +31,7 @@ void LeafNodeMesh::init() {
 
   /* Allow transparency */
   if (mesh_geometry_ptr_->getOrCreateStateSet()) {
-    vsg::ref_ptr<osg::StateSet> nodess(
+    vsg::ref_ptr<vsg::StateGroup> nodess(
         mesh_geometry_ptr_->getOrCreateStateSet());
     nodess->setMode(GL_BLEND, ::osg::StateAttribute::OFF);
     // Create Material and assign color.
@@ -130,7 +130,7 @@ void LeafNodeMesh::setColor(const osgVector4& color_diffuse) {
 }
 
 void LeafNodeMesh::setAlpha(const float& alpha) {
-  osg::StateSet* ss = mesh_geometry_ptr_->getOrCreateStateSet();
+  vsg::StateGroup* ss = mesh_geometry_ptr_->getOrCreateStateSet();
   alpha_ = alpha;
   osg::Material* mat;
   if (ss->getAttribute(osg::StateAttribute::MATERIAL))
@@ -161,7 +161,7 @@ void LeafNodeMesh::setTexture(const std::string& image_path) {
   setDirty();
 }
 
-vsg::ref_ptr<osg::Node> LeafNodeMesh::getOsgNode() const { return geode_ptr_; }
+vsg::ref_ptr<vsg::Node> LeafNodeMesh::getOsgNode() const { return geode_ptr_; }
 
 void LeafNodeMesh::setVertexArray(osg::Vec3ArrayRefPtr arrayOfVertices) {
   mesh_geometry_ptr_->setVertexArray(arrayOfVertices);

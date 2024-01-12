@@ -39,7 +39,7 @@ namespace viewer {
 namespace urdfParser {
 
 namespace details {
-typedef std::map<std::string, ::osg::NodeRefPtr> Cache_t;
+typedef std::map<std::string, ::vsg::NodeRefPtr> Cache_t;
 struct Material {
   bool hasColor, hasTexture;
   osgVector4 color;

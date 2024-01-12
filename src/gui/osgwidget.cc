@@ -69,7 +69,6 @@ OSGWidget::OSGWidget(WindowsManagerPtr_t wm, const std::string& name,
       wid_(),
       wm_(),
       viewer_(new vsg::Viewer),
-      screenCapture_(),
       tmpDirectory_(NULL),
       toolBar_(new QToolBar(QString::fromStdString(name) + " tool bar")),
       process_(new QProcess(this)),
@@ -447,13 +446,6 @@ void OSGWidget::initGraphicsWindowsAndViewer(MainWindow* parent,
   viewer_->setCameraManipulator(keyswitchManipulator.get());
 
   // Event handlers
-  screenCapture_ = new osgViewer::ScreenCaptureHandler(
-      new osgViewer::ScreenCaptureHandler::WriteToFile(
-          parent->settings_->captureDirectory + "/" +
-              parent->settings_->captureFilename,
-          parent->settings_->captureExtension),
-      1);
-  viewer_->addEventHandler(screenCapture_);
   viewer_->addEventHandler(new osgViewer::HelpHandler);
   viewer_->addEventHandler(pickHandler_);
   viewer_->addEventHandler(new osgViewer::StatsHandler);

@@ -30,21 +30,21 @@ class Node : public Properties {
   bool dirty_;
 
   /** PositionAttitudeTransform related to the global configuration */
-  osg::MatrixTransformRefPtr transform_ptr_;
+  vsg::MatrixTransformRefPtr transform_ptr_;
   RangedStoredPropertyTpl<osgVector3, float> scale_;
-  osg::Matrixf Ms_;
+  vsg::MatrixTransform Ms_;
   StoredPropertyTpl<Configuration> M_;
 
   /** Associated switch node */
   /** TODO: The use of multiswitch may be better */
-  osg::GroupRefPtr switch_node_ptr_;
+  vsg::GroupRefPtr switch_node_ptr_;
   WireFrameMode selected_wireframe_;
-  std::vector< ::osg::GroupRefPtr> wireframe_modes_;
+  std::vector< ::vsg::GroupRefPtr> wireframe_modes_;
 
-  osg::GroupRefPtr hl_switch_node_ptr_;
+  vsg::GroupRefPtr hl_switch_node_ptr_;
   std::size_t selected_highlight_;
   bool highlight_enabled_;
-  std::vector< ::osg::GroupRefPtr> highlight_nodes_;
+  std::vector< ::vsg::GroupRefPtr> highlight_nodes_;
 
   VisibilityMode visibilityMode_;
   LightingMode lightingMode_;
@@ -54,14 +54,9 @@ class Node : public Properties {
 
   void updateTransform();
 
-  ::osg::Group* setupHighlightState(unsigned int state);
+  ::vsg::Group* setupHighlightState(unsigned int state);
 
  protected:
-  /** protected because it's used in LeafNodeCapsule */
-  ::osg::GeodeRefPtr landmark_geode_ptr_;
-
-  /** Geode pointer for landmarks */
-  ::osg::GeodeRefPtr geode_ptr_;
   /** Alpha value */
   float alpha_;
 
@@ -76,15 +71,14 @@ class Node : public Properties {
   /**
    \brief Return the root node to include it in the scene
    */
-  ::osg::GroupRefPtr asQueue() const { return transform_ptr_; }
+  ::vsg::GroupRefPtr asQueue() const { return transform_ptr_; }
 
   void setID(const std::string& id_name) {
     id_name_ = id_name;
-    switch_node_ptr_->setName(id_name_);
   }
 
   void setTransparentRenderingBin(bool transparent = true,
-                                  osg::StateSet* ss = NULL);
+                                  vsg::StateGroup* ss = NULL);
 
  public:
   static const float TransparencyRenderingBinThreshold;
@@ -107,7 +101,7 @@ class Node : public Properties {
   /** Whether this node (and its children) can be selected from mouse.
    */
   bool isSelectable() const {
-    return transform_ptr_->getNodeMask() & IntersectionBit;
+    return false;
   }
 
   /** Set whether this node (and its children) can be selected from mouse.
@@ -178,20 +172,16 @@ class Node : public Properties {
   /** Set the color of the object */
   virtual void setColor(const osgVector4& color) = 0;
 
-  virtual vsg::ref_ptr<osg::Node> getOsgNode() const;
+  virtual vsg::ref_ptr<vsg::Node> getOsgNode() const;
 
   /**
    \brief Return the root node to include it in the scene
    */
-  virtual ::osg::GroupRefPtr asGroup() const { return switch_node_ptr_; }
+  virtual ::vsg::GroupRefPtr asGroup() const { return switch_node_ptr_; }
 
   virtual void addLandmark(const float& size);
 
   bool hasLandmark() const;
-
-  ::osg::StateSetRefPtr getOrCreateRootStateSet() {
-    return switch_node_ptr_->getOrCreateStateSet();
-  }
 
   void deleteLandmark();
 

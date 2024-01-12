@@ -32,7 +32,7 @@ class LeafNodeXYZAxis;
 
 DEF_CLASS_SMART_PTR(NodeVisitor)
 
-class NodeVisitor : public osg::Referenced {
+class NodeVisitor : public vsg::Object {
  public:
   NodeVisitor(bool invisibleAreValid = true)
       : invisibleAreValid_(invisibleAreValid) {}

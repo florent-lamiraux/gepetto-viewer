@@ -65,7 +65,7 @@ struct ResizeHandler : osgGA::GUIEventHandler {
 
   virtual bool handle(const osgGA::GUIEventAdapter& gea,
                       osgGA::GUIActionAdapter& /*gaa*/, osg::Object* /*obj*/,
-                      osg::NodeVisitor* /*nv*/
+                      vsg::NodeVisitor* /*nv*/
   ) {
     osgGA::GUIEventAdapter::EventType ev = gea.getEventType();
 
@@ -152,7 +152,7 @@ void WindowManager::createBackground() {
   bg_camera_ = new osg::Camera;
   bg_camera_->setName("bg_camera");
   bg_camera_->setCullMask(VisibilityBit);
-  const osg::Node::NodeMask mask = ~IntersectionBit;
+  const vsg::Node::NodeMask mask = ~IntersectionBit;
   bg_camera_->setNodeMask(mask);
 
   vsg::ref_ptr<const osg::GraphicsContext::Traits> traits_ptr =
@@ -181,7 +181,7 @@ void WindowManager::createBackground() {
   {
     osg::Geode* geode = new osg::Geode();
     geode->setName("background");
-    osg::StateSet* stateset = geode->getOrCreateStateSet();
+    vsg::StateGroup* stateset = geode->getOrCreateStateSet();
     stateset->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
 
     bg_geom_ = new osg::Geometry;
@@ -205,7 +205,7 @@ void WindowManager::createBackground() {
 
     stateset = bg_geom_->getOrCreateStateSet();
     stateset->setMode(GL_BLEND, osg::StateAttribute::ON);
-    stateset->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+    stateset->setRenderingHint(vsg::StateGroup::TRANSPARENT_BIN);
 
     geode->addDrawable(bg_geom_);
     bg_camera_->addChild(geode);
@@ -226,7 +226,7 @@ void WindowManager::createHUDcamera() {
 
   hud_camera_ = new osg::Camera;
   hud_camera_->setName("hud_camera");
-  const osg::Node::NodeMask mask = ~IntersectionBit;
+  const vsg::Node::NodeMask mask = ~IntersectionBit;
   hud_camera_->setNodeMask(mask);
 
   hud_camera_->setReferenceFrame(osg::Transform::ABSOLUTE_RF);

@@ -47,7 +47,7 @@ PickHandler::PickHandler(OSGWidget* parent, WindowsManagerPtr_t wsm)
       pushed_(false),
       lastX_(0),
       lastY_(0),
-      lineIntersector_(new osgUtil::LineSegmentIntersector(
+      lineIntersector_(new vsg::LineSegmentIntersector(
           osgUtil::Intersector::WINDOW, 0., 0.)),
       pointIntersector_(
           new PointIntersector(osgUtil::Intersector::WINDOW, 0., 0.)) {
@@ -122,8 +122,8 @@ void PickHandler::computeLineIntersection(osgGA::GUIActionAdapter& aa,
     // On the contrary, locking here creates a deadlock as the lock is
     // already acquired by OSGWidget::paintEvent.
     // wsm_->lock().lock();
-    // vsg::ref_ptr<osgUtil::LineSegmentIntersector> intersector =
-    // new osgUtil::LineSegmentIntersector(osgUtil::Intersector::WINDOW, x, y);
+    // vsg::ref_ptr<vsg::LineSegmentIntersector> intersector =
+    // new vsg::LineSegmentIntersector(osgUtil::Intersector::WINDOW, x, y);
     // intersector->setIntersectionLimit( osgUtil::Intersector::LIMIT_NEAREST );
 
     osgUtil::IntersectionVisitor iv(lineIntersector_);
@@ -177,7 +177,7 @@ void PickHandler::selectionNodeUnderCursor(osgGA::GUIActionAdapter& aa,
 
   // Only one intersection. Otherwise, one has to loop on elements of
   // intersector->getIntersections();
-  const osgUtil::LineSegmentIntersector::Intersection& intersection =
+  const vsg::LineSegmentIntersector::Intersection& intersection =
       li->getFirstIntersection();
   for (int i = (int)intersection.nodePath.size() - 1; i >= 0; --i) {
     if (!(intersection.nodePath[i]->getNodeMask() & viewer::NodeBit)) continue;
@@ -211,7 +211,7 @@ void PickHandler::centerViewToMouse(osgGA::GUIActionAdapter& aa, const float& x,
 
   // Only one intersection. Otherwise, one has to loop on elements of
   // intersector->getIntersections();
-  const osgUtil::LineSegmentIntersector::Intersection& intersection =
+  const vsg::LineSegmentIntersector::Intersection& intersection =
       lineIntersector_->getFirstIntersection();
 
   osg::Vec3f P(intersection.getWorldIntersectPoint());
